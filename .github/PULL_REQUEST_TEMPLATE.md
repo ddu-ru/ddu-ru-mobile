@@ -1,13 +1,3 @@
----
-name: "\U0001F4AC PR template"
-about: A template that structures and creates PR for function development and bug
-  correction.
-title: ''
-labels: ''
-assignees: ''
-
----
-
 ## 📌 PR 제목
 - [기능] 로그인 화면 구현
 - [버그] 댓글 작성 시 앱 크래시 수정
