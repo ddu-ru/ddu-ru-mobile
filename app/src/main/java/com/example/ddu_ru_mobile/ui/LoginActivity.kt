@@ -17,12 +17,12 @@ class LoginActivity : AppCompatActivity() {
 
         //버튼 클릭시 kakao로그인 실행
         kakao_btn.setOnClickListener{
-            KakaoLoginHelper.kakaoLogin()
+            KakaoLoginHelper.kakaoLogin(this)
         }
 
         //버튼 클릭시 google로그인 실행
         google_btn.setOnClickListener {
-            GoogleLoginHelper.googleLogin()
+            GoogleLoginHelper.googleLogin(this)
         }
     }
 }
