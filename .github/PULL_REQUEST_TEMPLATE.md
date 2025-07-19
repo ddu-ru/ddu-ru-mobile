@@ -1,11 +1,3 @@
----
-name: "\U0001F4DD  Feature Issue Templeate"
-about: Templates used to create new features.
-title: "[FEATURE]"
-labels: feature
-assignees: choi-day, hyeminililo
-
----
 
 ## 📝 이슈 제목
 
