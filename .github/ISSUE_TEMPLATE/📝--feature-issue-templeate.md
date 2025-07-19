@@ -1,9 +1,9 @@
 ---
-name: Feature Issue Templeate
+name: "\U0001F4DD  Feature Issue Templeate"
 about: Templates used to create new features.
 title: "[FEATURE]"
 labels: feature
-assignees: ''
+assignees: choi-day, hyeminililo
 
 ---
 
