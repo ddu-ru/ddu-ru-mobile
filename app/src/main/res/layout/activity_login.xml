@@ -28,6 +28,7 @@
         app:cardCornerRadius="12dp"
         app:cardElevation="2dp">
         <ImageButton
+            android:id="@+id/kakao_btn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/kakaologin"/>
@@ -45,6 +46,7 @@
         app:cardCornerRadius="12dp"
         app:cardElevation="2dp">
         <ImageButton
+            android:id="@+id/google_btn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/googlelogin" />
