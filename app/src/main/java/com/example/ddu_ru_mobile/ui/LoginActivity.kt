@@ -1,7 +1,6 @@
 package com.example.ddu_ru_mobile.ui
 
 import android.os.Bundle
-import android.widget.Button
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ddu_ru_mobile.R
