@@ -1,12 +1,3 @@
----
-name: "\U0001F4DD  Feature Issue Templeate"
-about: Templates used to create new features.
-title: "[FEATURE]"
-labels: feature
-assignees: choi-day, hyeminililo
-
----
-
 ## 📝 이슈 제목
 
 - 간결하게 핵심 요약 (예: [Login] 카카오 로그인 버튼 UI 수정)
