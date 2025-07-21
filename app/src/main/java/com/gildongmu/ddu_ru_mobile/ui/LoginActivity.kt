@@ -1,11 +1,11 @@
-package com.example.ddu_ru_mobile.ui
+package com.gildongmu.ddu_ru_mobile.ui
 
 import android.os.Bundle
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
-import com.example.ddu_ru_mobile.R
-import com.example.ddu_ru_mobile.util.login.KakaoLoginHelper
-import com.example.ddu_ru_mobile.util.login.GoogleLoginHelper
+import com.gildongmu.ddu_ru_mobile.R
+import com.gildongmu.ddu_ru_mobile.util.login.KakaoLoginHelper
+import com.gildongmu.ddu_ru_mobile.util.login.GoogleLoginHelper
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
