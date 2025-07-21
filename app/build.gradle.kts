@@ -9,7 +9,7 @@ plugins {
 val localProperties = Properties()
 localProperties.load(project.rootProject.file("local.properties").inputStream())
 val kakaoNativeAppKey = localProperties.getProperty("KAKAO_NATIVE_APP_KEY")?:""
-val MenifestKakaoNativeAppKey = localProperties.getProperty("MENIFEST_KAKAO_NATIVE_APP_KEY")?:""
+val ManifestKakaoNativeAppKey = localProperties.getProperty("MANIFEST_KAKAO_NATIVE_APP_KEY")?:""
 
 android {
     namespace = "com.gildongmu.ddu_ru_mobile"
@@ -26,7 +26,7 @@ android {
 
         buildConfigField("String", "KAKAO_NATIVE_APP_KEY", kakaoNativeAppKey)
         //manifest에서 사용
-        manifestPlaceholders["MENIFEST_KAKAO_NATIVE_APP_KEY"] = MenifestKakaoNativeAppKey
+        manifestPlaceholders["MANIFEST_KAKAO_NATIVE_APP_KEY"] = ManifestKakaoNativeAppKey
     }
 
     buildTypes {
