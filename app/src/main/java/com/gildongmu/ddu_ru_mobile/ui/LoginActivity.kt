@@ -18,6 +18,7 @@ class LoginActivity : AppCompatActivity() {
         //버튼 클릭시 kakao로그인 실행
         kakao_btn.setOnClickListener{
             KakaoLoginHelper.kakaoLogin(this)
+            KakaoLoginHelper.getToekn()
         }
 
         //버튼 클릭시 google로그인 실행
