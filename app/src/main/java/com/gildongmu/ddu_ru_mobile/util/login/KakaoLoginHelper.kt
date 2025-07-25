@@ -1,4 +1,4 @@
-package com.example.ddu_ru_mobile.util.login
+package com.gildongmu.ddu_ru_mobile.util.login
 
 import android.content.Context
 import android.widget.Toast

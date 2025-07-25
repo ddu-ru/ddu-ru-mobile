@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.Ddurumobile" parent="Theme.AppCompat.Light.NoActionBar" />
-<!--    <style name="Theme.Ddurumobile" parent="android:Theme.Material.Light.NoActionBar" />-->
 </resources>

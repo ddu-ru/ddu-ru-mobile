@@ -1,4 +1,4 @@
-package com.example.ddu_ru_mobile.ui.theme
+package com.gildongmu.ddu_ru_mobile.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

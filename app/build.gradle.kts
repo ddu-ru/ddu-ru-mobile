@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.ddu_ru_mobile"
+    namespace = "com.gildongmu.ddu_ru_mobile"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.ddu_ru_mobile"
+        applicationId = "com.gildongmu.ddu_ru_mobile"
         minSdk = 34
         targetSdk = 35
         versionCode = 1
@@ -59,5 +59,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.appcompat)
     implementation("androidx.cardview:cardview:1.0.0")
-
+    implementation ("androidx.credentials:credentials:1.5.0")
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
+    implementation ("com.google.android.libraries.identity.googleid:googleid:1.5.0")
 }
+
+

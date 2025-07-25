@@ -1,4 +1,4 @@
-package com.example.ddu_ru_mobile
+package com.gildongmu.ddu_ru_mobile
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
