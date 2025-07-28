@@ -1,6 +1,6 @@
 package com.gildongmu.ddu_ru_mobile.ui
 
-import android.content.Intent
+
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
@@ -9,9 +9,13 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.gildongmu.ddu_ru_mobile.R
+import com.gildongmu.ddu_ru_mobile.data.model.request.LoginRequest
+import com.gildongmu.ddu_ru_mobile.data.remote.RetrofitClient
 import com.gildongmu.ddu_ru_mobile.util.login.GoogleLoginHelper
 import com.gildongmu.ddu_ru_mobile.util.login.KakaoLoginHelper
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
 
@@ -39,7 +43,20 @@ class LoginActivity : AppCompatActivity() {
                     result.data,
                     onSuccess = { idToken ->
                         Log.d("LoginActivity", "받은 ID Token: $idToken")
-                        // TODO: 백엔드 서버에 ID 토큰 보내기
+
+                        lifecycleScope.launch {
+                            try {
+                                val response = RetrofitClient.authService.loginWithGoogle(
+                                    LoginRequest(idToken)
+                                )
+                                Log.d("LoginActivity", "로그인 성공: $response")
+
+                                // TODO: SharedPreferences에 accessToken 저장, 홈 화면 이동 등
+                            } catch (e: Exception) {
+                                Log.e("LoginActivity", "서버 로그인 실패", e)
+                                Toast.makeText(this@LoginActivity, "서버 로그인 실패", Toast.LENGTH_SHORT).show()
+                            }
+                        }
                     },
                     onFailure = {
                         Toast.makeText(this, "Google 로그인 실패", Toast.LENGTH_SHORT).show()
