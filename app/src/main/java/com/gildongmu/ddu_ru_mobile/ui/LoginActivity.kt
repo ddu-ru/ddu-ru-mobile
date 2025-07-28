@@ -1,28 +1,58 @@
 package com.gildongmu.ddu_ru_mobile.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageButton
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.gildongmu.ddu_ru_mobile.R
-import com.gildongmu.ddu_ru_mobile.util.login.KakaoLoginHelper
 import com.gildongmu.ddu_ru_mobile.util.login.GoogleLoginHelper
+import com.gildongmu.ddu_ru_mobile.util.login.KakaoLoginHelper
 
 class LoginActivity : AppCompatActivity() {
+
+    private lateinit var googleSignInLauncher: ActivityResultLauncher<IntentSenderRequest>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)  // XML 연결
+        setContentView(R.layout.activity_login)
 
-        val kakao_btn = findViewById<ImageButton>(R.id.kakao_btn)
-        val google_btn = findViewById<ImageButton>(R.id.google_btn)
+        val kakaoBtn = findViewById<ImageButton>(R.id.kakao_btn)
+        val googleBtn = findViewById<ImageButton>(R.id.google_btn)
 
-        //버튼 클릭시 kakao로그인 실행
-        kakao_btn.setOnClickListener{
+        // 카카오 로그인 버튼
+        kakaoBtn.setOnClickListener {
             KakaoLoginHelper.kakaoLogin(this)
         }
 
-        //버튼 클릭시 google로그인 실행
-        google_btn.setOnClickListener {
-            GoogleLoginHelper.googleLogin(this)
+        // Google 로그인 결과 받는 Launcher 등록
+        googleSignInLauncher = registerForActivityResult(
+            ActivityResultContracts.StartIntentSenderForResult()
+        ) { result ->
+
+            if (result.resultCode == RESULT_OK) {
+                GoogleLoginHelper.handleResult(
+                    result.data,
+                    onSuccess = { idToken ->
+                        Log.d("LoginActivity", "받은 ID Token: $idToken")
+                        // TODO: 백엔드 서버에 ID 토큰 보내기
+                    },
+                    onFailure = {
+                        Toast.makeText(this, "Google 로그인 실패", Toast.LENGTH_SHORT).show()
+                    }
+                )
+            } else {
+                Toast.makeText(this, "Google 로그인 취소됨", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // 구글 로그인 버튼
+        googleBtn.setOnClickListener {
+            GoogleLoginHelper.initGoogleLogin(this, googleSignInLauncher)
         }
     }
 }

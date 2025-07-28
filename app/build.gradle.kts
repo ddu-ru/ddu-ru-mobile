@@ -7,6 +7,9 @@ plugins {
 android {
     namespace = "com.gildongmu.ddu_ru_mobile"
     compileSdk = 35
+    buildFeatures {
+        buildConfig = true
+    }
 
     defaultConfig {
         applicationId = "com.gildongmu.ddu_ru_mobile"
@@ -14,8 +17,8 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String","GOOGLE_CLIENT_ID","\"${project.properties["GOOGLE_CLIENT_ID"]}\"")
     }
 
     buildTypes {
@@ -50,6 +53,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.media3.common.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -61,7 +65,7 @@ dependencies {
     implementation("androidx.cardview:cardview:1.0.0")
     implementation ("androidx.credentials:credentials:1.5.0")
     implementation("com.google.android.gms:play-services-auth:21.0.0")
-    implementation ("com.google.android.libraries.identity.googleid:googleid:1.5.0")
+    implementation ("com.google.android.libraries.identity.googleid:googleid:1.1.1")
 }
 
 
