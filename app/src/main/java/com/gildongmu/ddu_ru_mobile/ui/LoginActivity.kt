@@ -28,12 +28,11 @@ class LoginActivity : AppCompatActivity() {
         val kakaoBtn = findViewById<ImageButton>(R.id.kakao_btn)
         val googleBtn = findViewById<ImageButton>(R.id.google_btn)
 
-        // 카카오 로그인 버튼
+
         kakaoBtn.setOnClickListener {
             KakaoLoginHelper.kakaoLogin(this)
         }
 
-        // Google 로그인 결과 받는 Launcher 등록
         googleSignInLauncher = registerForActivityResult(
             ActivityResultContracts.StartIntentSenderForResult()
         ) { result ->
@@ -67,7 +66,7 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        // 구글 로그인 버튼
+
         googleBtn.setOnClickListener {
             GoogleLoginHelper.initGoogleLogin(this, googleSignInLauncher)
         }

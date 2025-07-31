@@ -20,10 +20,8 @@ object GoogleLoginHelper {
         activity: Activity,
         launcher: ActivityResultLauncher<IntentSenderRequest>
     ) {
-        // 1. OneTap Client 초기화
         oneTapClient = Identity.getSignInClient(activity)
 
-        // 2. 로그인 요청 구성
         signInRequest = BeginSignInRequest.builder()
             .setGoogleIdTokenRequestOptions(
                 BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
@@ -38,7 +36,7 @@ object GoogleLoginHelper {
             .setAutoSelectEnabled(false)
             .build()
 
-        // 3. 로그인 실행
+
         oneTapClient.beginSignIn(signInRequest)
             .addOnSuccessListener { result ->
                 val request = IntentSenderRequest.Builder(result.pendingIntent.intentSender).build()
