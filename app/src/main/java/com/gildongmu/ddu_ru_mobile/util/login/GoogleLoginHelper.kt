@@ -6,8 +6,8 @@ import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import com.gildongmu.ddu_ru_mobile.BuildConfig
-
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
+
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.api.ApiException

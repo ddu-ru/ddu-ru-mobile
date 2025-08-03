@@ -1,7 +1,12 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+}
+configurations.all {
+    exclude(group = "com.intellij", module = "annotations")
 }
 
 android {
@@ -17,8 +22,15 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
+
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String","GOOGLE_CLIENT_ID","\"${project.properties["GOOGLE_CLIENT_ID"]}\"")
+        if (localPropertiesFile.exists()) {
+            localProperties.load(localPropertiesFile.inputStream())
+            val clientId = localProperties.getProperty("GOOGLE_CLIENT_ID")
+            buildConfigField("String", "GOOGLE_CLIENT_ID", "\"$clientId\"")
+        }
     }
 
     buildTypes {
@@ -54,6 +66,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.media3.common.ktx)
+    implementation(libs.androidx.room.compiler)
+    implementation(libs.play.services.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -64,7 +78,6 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation("androidx.cardview:cardview:1.0.0")
     implementation ("androidx.credentials:credentials:1.5.0")
-    implementation("com.google.android.gms:play-services-auth:21.0.0")
     implementation ("com.google.android.libraries.identity.googleid:googleid:1.1.1")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
