@@ -25,11 +25,15 @@ android {
 
         val localProperties = Properties()
         val localPropertiesFile = rootProject.file("local.properties")
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         if (localPropertiesFile.exists()) {
             localProperties.load(localPropertiesFile.inputStream())
-            val clientId = localProperties.getProperty("GOOGLE_CLIENT_ID")
-            buildConfigField("String", "GOOGLE_CLIENT_ID", "\"$clientId\"")
+
+            //noinspection WrongGradleMethod
+            listOf("GOOGLE_CLIENT_ID", "BASE_URL").forEach { key ->
+                localProperties.getProperty(key)?.let { value ->
+                    this@defaultConfig.buildConfigField("String", key, "\"$value\"")
+                }
+            }
         }
     }
 
