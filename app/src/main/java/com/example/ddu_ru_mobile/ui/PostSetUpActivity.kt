@@ -2,17 +2,23 @@ package com.example.ddu_ru_mobile.ui
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import android.widget.AdapterView
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.ddu_ru_mobile.R
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
+import com.example.ddu_ru_mobile.ui.adapter.BoardSpinnerAdapter
 
 class PostSetUpActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +32,8 @@ class PostSetUpActivity: AppCompatActivity() {
         val calendarView = findViewById<LinearLayout>(R.id.calendarView)
         val datePicker = findViewById<DatePicker>(R.id.datePicker)
         val scrollView = findViewById<ScrollView>(R.id.scrollView)
+        val spinnerRecruit = findViewById<Spinner>(R.id.spinnerRecruit)
+        val spinnerDeadline = findViewById<Spinner>(R.id.spinnerDeadline)
 
         //searchView UI
         val searchIcon = searchView.findViewById<ImageView>(androidx.appcompat.R.id.search_mag_icon)
@@ -81,7 +89,7 @@ class PostSetUpActivity: AppCompatActivity() {
             calendarView.visibility = View.VISIBLE
         }
 
-                // DatePicker 날짜 변경 리스너
+        // DatePicker 날짜 변경 리스너
         datePicker.setOnDateChangedListener { view, year, month, dayOfMonth ->
             val selectedDate = "$year-${month + 1}-$dayOfMonth"
 
@@ -112,11 +120,15 @@ class PostSetUpActivity: AppCompatActivity() {
                 } else {
                     // 도착일은 출발일보다 늦어야 함
                     val isLaterDate = (year > departureYear) ||
-                                     (year == departureYear && month > departureMonth) ||
-                                     (year == departureYear && month == departureMonth && dayOfMonth > departureDay)
+                            (year == departureYear && month > departureMonth) ||
+                            (year == departureYear && month == departureMonth && dayOfMonth > departureDay)
 
                     if (!isLaterDate) {
-                        android.widget.Toast.makeText(this, "도착일은 출발일보다 늦어야 합니다!", android.widget.Toast.LENGTH_SHORT).show()
+                        android.widget.Toast.makeText(
+                            this,
+                            "도착일은 출발일보다 늦어야 합니다!",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
                         return@setOnDateChangedListener
                     }
 
@@ -129,15 +141,83 @@ class PostSetUpActivity: AppCompatActivity() {
 
         // 도착일 버튼 클릭 리스너
         btnArivalDate.setOnClickListener {
-            if(isFirstDateSelection) android.widget.Toast.makeText(this, "출발일을 먼저 선택해주세요!", android.widget.Toast.LENGTH_SHORT).show()
+            if (isFirstDateSelection) android.widget.Toast.makeText(
+                this,
+                "출발일을 먼저 선택해주세요!",
+                android.widget.Toast.LENGTH_SHORT
+            ).show()
             // 도착일 수정 모드: 출발일은 그대로 유지
             else {
-            isFirstDateSelection = false
-            isEditingArrivalDate = true
-            calendarView.visibility = View.VISIBLE}
+                isFirstDateSelection = false
+                isEditingArrivalDate = true
+                calendarView.visibility = View.VISIBLE
+            }
         }
 
         // 달력 외 다른 부분 클릭 시 달력 숨기기
         scrollView.hideIfTouchedOutside(calendarView)
+
+        //인원수 드롭다운 메뉴
+        val recruitItems = resources.getStringArray(R.array.recruitArray)
+        val recruitSpinnerAdapter =
+            BoardSpinnerAdapter(this, R.layout.spinner_item, R.id.spinnerText , recruitItems)
+        spinnerRecruit.adapter = recruitSpinnerAdapter
+        spinnerRecruit.setSelection(spinnerRecruit.adapter.count)
+
+        spinnerRecruit.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                val textView = view.findViewById<TextView>(R.id.spinnerText)
+                when (position) {
+                    8 -> {
+                        // hint 상태
+                        spinnerRecruit.setBackgroundResource(R.drawable.view_border_defualt)
+                    }
+                    else -> {
+                        // 선택된 상태
+                        textView?.setTextColor(ContextCompat.getColor(spinnerRecruit.context, R.color.main_color))
+                        spinnerRecruit.setBackgroundResource(R.drawable.view_border_pressed)
+                    }
+                }
+            }
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                Log.d("MyTag", "onNothingSelected")
+            }
+        }
+
+        //모집기간 드롭다운 메뉴
+        val deadlineItems = resources.getStringArray(R.array.deadlineArray)
+        val deadlineSpinnerAdapter =
+            BoardSpinnerAdapter(this, R.layout.spinner_item, R.id.spinnerText, deadlineItems)
+        spinnerDeadline.adapter =  deadlineSpinnerAdapter
+        spinnerDeadline.setSelection(spinnerDeadline.adapter.count)
+        spinnerDeadline.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                val textView = view.findViewById<TextView>(R.id.spinnerText)
+                when (position) {
+                    5 -> {
+                        // hint 상태
+                        spinnerDeadline.setBackgroundResource(R.drawable.view_border_defualt)
+                    }
+                    else -> {
+                        // 선택된 상태
+                        textView?.setTextColor(ContextCompat.getColor(spinnerDeadline.context, R.color.main_color))
+                        spinnerDeadline.setBackgroundResource(R.drawable.view_border_pressed)
+                    }
+                }
+            }
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                Log.d("MyTag", "onNothingSelected")
+            }
+        }
     }
 }
