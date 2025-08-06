@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="deadlineArray">
+        <item>1일</item>
+        <item>3일</item>
+        <item>7일</item>
+        <item>30일</item>
+        <item>상시모집</item>
+        <item>모집기간</item>
+    </string-array>
+</resources>

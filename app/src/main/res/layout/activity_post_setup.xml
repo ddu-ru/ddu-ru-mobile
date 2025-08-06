@@ -93,18 +93,57 @@
                 android:datePickerMode="calendar"
                 android:calendarViewShown="true"
                 android:spinnersShown="false" />
-                
+
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="모집 인원을 알려주세요"/>
 
+        <Spinner
+            android:id="@+id/spinnerRecruit"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:dropDownWidth="match_parent"
+            android:gravity="center"
+            android:textColor="@color/sub_gray"
+            android:background="@drawable/view_border_defualt"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="모집 기간을 알려주세요"/>
+
+            <Spinner
+                android:id="@+id/spinnerDeadline"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:dropDownWidth="match_parent"
+                android:gravity="center"
+                android:textColor="@color/sub_gray"
+                android:background="@drawable/view_border_defualt"/>
+        </LinearLayout>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="모집 기간을 알려주세요"/>
+            android:text="함께하고 싶은 연령대를 알려주세요"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="예상경비를 알려주세요"/>
 
     </LinearLayout>
 
