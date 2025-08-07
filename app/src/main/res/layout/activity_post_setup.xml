@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="25dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -20,6 +20,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="게시글 작성하기"
+                android:textColor="@color/title_text_black"
+                android:textSize="20sp"
                 android:textStyle="bold"/>
 
             <Button
@@ -28,6 +30,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="right"
                 android:text="취소"
+                android:textSize="18sp"
                 android:background="#00ff0000"
                 android:textColor="@color/text_blue"
                 android:stateListAnimator="@null"/>
@@ -36,41 +39,54 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="여행 장소를 알려주세요(필수)" />
+            android:text="여행 장소를 알려주세요(필수)"
+            android:textColor="@color/content_text_black"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp" />
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/view_border_defualt"
             android:stateListAnimator="@null"
             android:queryBackground="@null"
             android:layoutDirection="rtl"
-
+            android:layout_marginTop="8dp"
             app:searchIcon="@drawable/ic_searchicon_custom_defualt"
             app:iconifiedByDefault="false"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="여행 날짜를 알려주세요(필수)"/>
+            android:text="여행 날짜를 알려주세요(필수)"
+            android:textColor="@color/content_text_black"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
 
             <Button
                 android:id="@+id/btnDepartureDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="출발일"
+                android:textColor="@color/sub_gray"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/view_border_defualt"/>
             <Button
                 android:id="@+id/btnArrivalDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="도착일"
+                android:textColor="@color/sub_gray"
+                android:layout_marginStart="10dp"
                 android:background="@drawable/view_border_defualt"/>
 
         </LinearLayout>
@@ -85,65 +101,154 @@
             android:layout_marginBottom="10dp"
             android:elevation="4dp"
             android:padding="16dp">
-                
+
             <DatePicker
                 android:id="@+id/datePicker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:datePickerMode="calendar"
                 android:calendarViewShown="true"
-                android:spinnersShown="false" />
+                android:spinnersShown="false"
+                android:background="@drawable/view_border_selector"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="모집 인원을 알려주세요"/>
-
-        <Spinner
-            android:id="@+id/spinnerRecruit"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:dropDownWidth="match_parent"
-            android:gravity="center"
-            android:textColor="@color/sub_gray"
-            android:background="@drawable/view_border_defualt"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="24dp">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="모집 기간을 알려주세요"/>
+                android:layout_weight="1"
+                android:text="모집 인원을 알려주세요"
+                android:gravity="center_vertical"
+                android:textColor="@color/content_text_black"
+                android:layout_gravity="start"
+                android:layout_marginStart="16dp"/>
+
+            <Spinner
+                android:id="@+id/spinnerRecruit"
+                android:layout_width="120dp"
+                android:layout_height="45dp"
+                android:dropDownWidth="match_parent"
+                android:textColor="@color/sub_gray"
+                android:background="@drawable/view_border_defualt"
+                android:layout_gravity="end"
+                android:overlapAnchor="false"
+                android:dropDownVerticalOffset="0dp"
+                android:popupBackground="@drawable/spinner_dropdown_background"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="24dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="모집 기간을 알려주세요"
+                android:gravity="center_vertical"
+                android:textColor="@color/content_text_black"
+                android:layout_gravity="start"
+                android:layout_marginStart="16dp"/>
 
             <Spinner
                 android:id="@+id/spinnerDeadline"
-                android:layout_width="wrap_content"
+                android:layout_width="120dp"
                 android:layout_height="45dp"
                 android:dropDownWidth="match_parent"
-                android:gravity="center"
                 android:textColor="@color/sub_gray"
-                android:background="@drawable/view_border_defualt"/>
+                android:background="@drawable/view_border_defualt"
+                android:layout_gravity="end"
+                android:overlapAnchor="false"
+                android:dropDownVerticalOffset="0dp"
+                android:popupBackground="@drawable/spinner_dropdown_background"/>
         </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="함께하고 싶은 연령대를 알려주세요"/>
+            android:text="함께하고 싶은 성별을 알려주세요"
+            android:textColor="@color/content_text_black"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="24dp">
+
+            <Button
+                android:id="@+id/btnMale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="남성"
+                android:textColor="@color/sub_gray"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/view_border_defualt"/>
+
+            <Button
+                android:id="@+id/btnFemale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="여성"
+                android:textColor="@color/sub_gray"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/view_border_defualt"/>
+
+            <Button
+                android:id="@+id/btnGenderAny"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="상관없음"
+                android:textColor="@color/sub_gray"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/view_border_defualt"/>
+
+        </LinearLayout>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="예상경비를 알려주세요"/>
+            android:text="함께하고 싶은 연령대를 알려주세요"
+            android:textColor="@color/content_text_black"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="예상경비를 알려주세요"
+            android:textColor="@color/content_text_black"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"/>
+
+        <Button
+            android:id="@+id/btnNext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="다음"
+            android:textColor="@color/sub_gray"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:background="@drawable/view_border_defualt"/>
+
 
     </LinearLayout>
 
