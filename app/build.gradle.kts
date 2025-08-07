@@ -58,4 +58,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     implementation("androidx.appcompat:appcompat:1.7.1")
+    implementation("com.kizitonwose.calendar:view:2.3.0")
 }
