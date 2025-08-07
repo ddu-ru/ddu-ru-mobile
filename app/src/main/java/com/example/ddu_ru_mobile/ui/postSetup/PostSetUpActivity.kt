@@ -1,4 +1,4 @@
-package com.example.ddu_ru_mobile.ui
+package com.example.ddu_ru_mobile.ui.postSetup
 
 import android.graphics.Rect
 import android.os.Bundle
@@ -18,7 +18,7 @@ import androidx.core.view.isVisible
 import com.example.ddu_ru_mobile.R
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
-import com.example.ddu_ru_mobile.ui.adapter.BoardSpinnerAdapter
+import com.example.ddu_ru_mobile.ui.postSetup.adapter.BoardSpinnerAdapter
 
 class PostSetUpActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,6 +99,7 @@ class PostSetUpActivity: AppCompatActivity() {
             if (isBothSet && !isEditingArrivalDate) {
                 // 둘 다 설정된 상태에서 출발일 수정 시 출발일부터 재설정
                 btnDepartureDate.text = selectedDate
+                btnDepartureDate.setTextColor(ContextCompat.getColor(this, R.color.main_color))
                 btnDepartureDate.setBackgroundResource(R.drawable.view_border_pressed)
                 departureYear = year
                 departureMonth = month
@@ -107,12 +108,14 @@ class PostSetUpActivity: AppCompatActivity() {
                 // 도착일 초기화
                 btnArivalDate.text = "도착일"
                 btnArivalDate.setBackgroundResource(R.drawable.view_border_defualt)
+                btnArivalDate.setTextColor(ContextCompat.getColor(this, R.color.sub_gray))
                 isFirstDateSelection = false
             } else {
                 // 첫 번째 선택은 출발일, 두 번째 선택은 도착일
                 if (isFirstDateSelection) {
                     btnDepartureDate.text = selectedDate
                     btnDepartureDate.setBackgroundResource(R.drawable.view_border_pressed)
+                    btnDepartureDate.setTextColor(ContextCompat.getColor(this, R.color.main_color))
                     departureYear = year
                     departureMonth = month
                     departureDay = dayOfMonth
@@ -134,6 +137,7 @@ class PostSetUpActivity: AppCompatActivity() {
 
                     btnArivalDate.text = selectedDate
                     btnArivalDate.setBackgroundResource(R.drawable.view_border_pressed)
+                    btnArivalDate.setTextColor(ContextCompat.getColor(this, R.color.main_color))
                     isEditingArrivalDate = false
                 }
             }
