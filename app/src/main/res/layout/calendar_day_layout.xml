@@ -10,6 +10,6 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:textSize="14sp"
-        android:background="@drawable/bg_calendar_day_default"
+        android:background="@drawable/bg_default_day"
         android:textColor="@color/black"/>
 </FrameLayout>
