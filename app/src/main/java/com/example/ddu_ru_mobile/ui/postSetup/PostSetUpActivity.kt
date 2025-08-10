@@ -156,7 +156,7 @@ class PostSetUpActivity: AppCompatActivity() {
         
         // 드롭다운 스타일 설정
         popupWindow?.elevation = 8f
-        popupWindow?.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.dropdown_background))
+        popupWindow?.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.bg_dropdown))
         
         // 앵커 뷰 아래에 표시
         popupWindow?.showAsDropDown(anchorView, 0, 8)
@@ -180,11 +180,11 @@ class PostSetUpActivity: AppCompatActivity() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (!newText.isNullOrEmpty()) {
                     // 텍스트가 있을 때: 배경 변경
-                    postSetUpBinding.searchView.setBackgroundResource(R.drawable.view_border_pressed)
+                    postSetUpBinding.searchView.setBackgroundResource(R.drawable.bg_border_selected)
                     searchIcon.setImageResource(R.drawable.ic_searchicon_custom_pressed)
                 } else {
                     // 텍스트 없을 때: 기본 배경
-                    postSetUpBinding.searchView.setBackgroundResource(R.drawable.view_border_defualt)
+                    postSetUpBinding.searchView.setBackgroundResource(R.drawable.bg_border_defualt)
                     searchIcon.setImageResource(R.drawable.ic_searchicon_custom_defualt)
                 }
                 return true
@@ -273,7 +273,7 @@ class PostSetUpActivity: AppCompatActivity() {
                     }
                     day.date == today -> {
                         // 오늘 날짜 (선택된 날짜가 아닌 경우에만)
-                        textView.background = ContextCompat.getDrawable(this@PostSetUpActivity, R.drawable.view_border_pressed)
+                        textView.background = ContextCompat.getDrawable(this@PostSetUpActivity, R.drawable.bg_border_selected)
                         textView.setTextColor(ContextCompat.getColor(this@PostSetUpActivity, R.color.calendar_text_black))
                     }
                     else -> {
@@ -302,22 +302,22 @@ class PostSetUpActivity: AppCompatActivity() {
                         if (selectedStartDate != null) {
                             postSetUpBinding.btnDepartureDate.text = selectedStartDate?.format(fmt)
                             postSetUpBinding.btnDepartureDate.setTextColor(ContextCompat.getColor(this@PostSetUpActivity, R.color.main_color))
-                            postSetUpBinding.btnDepartureDate.setBackgroundResource(R.drawable.view_border_pressed)
+                            postSetUpBinding.btnDepartureDate.setBackgroundResource(R.drawable.bg_border_selected)
                         } else {
                             postSetUpBinding.btnDepartureDate.text = "출발일 선택"
                             postSetUpBinding.btnDepartureDate.setTextColor(ContextCompat.getColor(this@PostSetUpActivity, R.color.sub_gray))
-                            postSetUpBinding.btnDepartureDate.setBackgroundResource(R.drawable.view_border_defualt)
+                            postSetUpBinding.btnDepartureDate.setBackgroundResource(R.drawable.bg_border_defualt)
                         }
                         
                         // 도착일 버튼 텍스트, 색상 및 배경 설정
                         if (selectedEndDate != null) {
                             postSetUpBinding.btnArrivalDate.text = selectedEndDate?.format(fmt)
                             postSetUpBinding.btnArrivalDate.setTextColor(ContextCompat.getColor(this@PostSetUpActivity, R.color.main_color))
-                            postSetUpBinding.btnArrivalDate.setBackgroundResource(R.drawable.view_border_pressed)
+                            postSetUpBinding.btnArrivalDate.setBackgroundResource(R.drawable.bg_border_selected)
                         } else {
                             postSetUpBinding.btnArrivalDate.text = "도착일 선택"
                             postSetUpBinding.btnArrivalDate.setTextColor(ContextCompat.getColor(this@PostSetUpActivity, R.color.sub_gray))
-                            postSetUpBinding.btnArrivalDate.setBackgroundResource(R.drawable.view_border_defualt)
+                            postSetUpBinding.btnArrivalDate.setBackgroundResource(R.drawable.bg_border_defualt)
                         }
                         postSetUpBinding.calendarView.notifyCalendarChanged()
                         return@setOnClickListener
@@ -376,22 +376,22 @@ class PostSetUpActivity: AppCompatActivity() {
                     if (selectedStartDate != null) {
                         postSetUpBinding.btnDepartureDate.text = selectedStartDate?.format(fmt)
                         postSetUpBinding.btnDepartureDate.setTextColor(ContextCompat.getColor(this@PostSetUpActivity, R.color.main_color))
-                        postSetUpBinding.btnDepartureDate.setBackgroundResource(R.drawable.view_border_pressed)
+                        postSetUpBinding.btnDepartureDate.setBackgroundResource(R.drawable.bg_border_selected)
                     } else {
                         postSetUpBinding.btnDepartureDate.text = "출발일 선택"
                         postSetUpBinding.btnDepartureDate.setTextColor(ContextCompat.getColor(this@PostSetUpActivity, R.color.sub_gray))
-                        postSetUpBinding.btnDepartureDate.setBackgroundResource(R.drawable.view_border_defualt)
+                        postSetUpBinding.btnDepartureDate.setBackgroundResource(R.drawable.bg_border_defualt)
                     }
                     
                     // 도착일 버튼 텍스트, 색상 및 배경 설정
                     if (selectedEndDate != null) {
                         postSetUpBinding.btnArrivalDate.text = selectedEndDate?.format(fmt)
                         postSetUpBinding.btnArrivalDate.setTextColor(ContextCompat.getColor(this@PostSetUpActivity, R.color.main_color))
-                        postSetUpBinding.btnArrivalDate.setBackgroundResource(R.drawable.view_border_pressed)
+                        postSetUpBinding.btnArrivalDate.setBackgroundResource(R.drawable.bg_border_selected)
                     } else {
                         postSetUpBinding.btnArrivalDate.text = "도착일 선택"
                         postSetUpBinding.btnArrivalDate.setTextColor(ContextCompat.getColor(this@PostSetUpActivity, R.color.sub_gray))
-                        postSetUpBinding.btnArrivalDate.setBackgroundResource(R.drawable.view_border_defualt)
+                        postSetUpBinding.btnArrivalDate.setBackgroundResource(R.drawable.bg_border_defualt)
                     }
 
                     // 캘린더 갱신
@@ -423,43 +423,12 @@ class PostSetUpActivity: AppCompatActivity() {
                 when (position) {
                     8 -> {
                         // hint 상태
-                        postSetUpBinding.spinnerRecruit.setBackgroundResource(R.drawable.view_border_defualt)
+                        postSetUpBinding.spinnerRecruit.setBackgroundResource(R.drawable.bg_border_defualt)
                     }
                     else -> {
                         // 선택된 상태
                         textView?.setTextColor(ContextCompat.getColor(postSetUpBinding.spinnerRecruit.context, R.color.main_color))
-                        postSetUpBinding.spinnerRecruit.setBackgroundResource(R.drawable.view_border_pressed)
-                    }
-                }
-            }
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                Log.d("MyTag", "onNothingSelected")
-            }
-        }
-
-        //모집기간 드롭다운 메뉴
-        val deadlineItems = resources.getStringArray(R.array.deadlineArray)
-        val deadlineSpinnerAdapter =
-            BoardSpinnerAdapter(this, R.layout.spinner_item, R.id.spinnerText, deadlineItems)
-        postSetUpBinding.spinnerDeadline.adapter = deadlineSpinnerAdapter
-        postSetUpBinding.spinnerDeadline.setSelection(postSetUpBinding.spinnerDeadline.adapter.count)
-        postSetUpBinding.spinnerDeadline.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View,
-                position: Int,
-                id: Long
-            ) {
-                val textView = view.findViewById<TextView>(R.id.spinnerText)
-                when (position) {
-                    5 -> {
-                        // hint 상태
-                        postSetUpBinding.spinnerDeadline.setBackgroundResource(R.drawable.view_border_defualt)
-                    }
-                    else -> {
-                        // 선택된 상태
-                        textView?.setTextColor(ContextCompat.getColor(postSetUpBinding.spinnerDeadline.context, R.color.main_color))
-                        postSetUpBinding.spinnerDeadline.setBackgroundResource(R.drawable.view_border_pressed)
+                        postSetUpBinding.spinnerRecruit.setBackgroundResource(R.drawable.bg_border_selected)
                     }
                 }
             }
