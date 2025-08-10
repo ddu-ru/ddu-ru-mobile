@@ -92,25 +92,24 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/calendarView"
+            android:id="@+id/calendarWrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="gone"
+            android:background="@drawable/view_border_pressed"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:elevation="4dp"
             android:padding="16dp">
 
-            <DatePicker
-                android:id="@+id/datePicker"
+            <com.kizitonwose.calendar.view.CalendarView
+                android:id="@+id/calendarView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:datePickerMode="calendar"
-                android:calendarViewShown="true"
-                android:spinnersShown="false"
-                android:background="@drawable/view_border_selector"/>
-
+                app:cv_dayViewResource="@layout/calendar_day_layout"
+                app:cv_monthHeaderResource="@layout/calendar_month_header"
+                app:cv_orientation="horizontal" />
         </LinearLayout>
 
         <LinearLayout
@@ -231,6 +230,12 @@
             android:textColor="@color/content_text_black"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"/>
+
+<!--        <com.google.android.material.slider.RangeSlider-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            />-->
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -238,6 +243,11 @@
             android:textColor="@color/content_text_black"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"/>
+
+<!--        <com.google.android.material.slider.RangeSlider-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            />-->
 
         <Button
             android:id="@+id/btnNext"
