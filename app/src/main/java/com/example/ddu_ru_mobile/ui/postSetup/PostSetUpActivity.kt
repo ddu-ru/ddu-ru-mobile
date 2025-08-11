@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -45,6 +46,9 @@ class PostSetUpActivity: AppCompatActivity() {
     private var selectedStartDate: LocalDate? = null
     private var selectedEndDate: LocalDate? = null
     private val today: LocalDate = LocalDate.now()
+
+    enum class Gender { MALE, FEMALE, ANY }
+    private var selectedGender: Gender? = null
 
     inner class DayViewContainer(view: View) : ViewContainer(view) {
         lateinit var day: CalendarDay
@@ -161,6 +165,31 @@ class PostSetUpActivity: AppCompatActivity() {
         // 앵커 뷰 아래에 표시
         popupWindow?.showAsDropDown(anchorView, 0, 8)
     }
+
+    private fun Button.asSelected() {
+        setTextColor(ContextCompat.getColor(this@PostSetUpActivity, R.color.main_color))
+        setBackgroundResource(R.drawable.bg_border_selected)
+    }
+
+    private fun Button.asDefault() {
+        setTextColor(ContextCompat.getColor(this@PostSetUpActivity, R.color.sub_gray))
+        setBackgroundResource(R.drawable.bg_border_defualt) // ← 파일명 그대로(오타 포함) 맞춰야 함
+    }
+
+    private fun applyGenderSelection(newGender: Gender) {
+        selectedGender = if (selectedGender == newGender) null else newGender
+
+        with(postSetUpBinding) {
+            btnMale   .ifSelectedThen(newGender == Gender.MALE)
+            btnFemale .ifSelectedThen(newGender == Gender.FEMALE)
+            btnGenderAny.ifSelectedThen(newGender == Gender.ANY)
+        }
+    }
+
+    private fun Button.ifSelectedThen(isSel: Boolean) {
+        if (isSel) asSelected() else asDefault()
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -458,12 +487,8 @@ class PostSetUpActivity: AppCompatActivity() {
 
 
         // 성별 선택
-        postSetUpBinding.btnMale.setOnClickListener{
-
-        }
-        postSetUpBinding.btnFemale.setOnClickListener{
-
-        }
-        postSetUpBinding.btnGenderAny.setOnClickListener{}
+        postSetUpBinding.btnMale.setOnClickListener { applyGenderSelection(Gender.MALE) }
+        postSetUpBinding.btnFemale.setOnClickListener { applyGenderSelection(Gender.FEMALE) }
+        postSetUpBinding.btnGenderAny.setOnClickListener { applyGenderSelection(Gender.ANY) }
     }
 }
