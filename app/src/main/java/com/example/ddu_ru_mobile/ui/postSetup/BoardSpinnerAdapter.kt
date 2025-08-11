@@ -1,4 +1,4 @@
-package com.example.ddu_ru_mobile.ui.postSetup.adapter
+package com.example.ddu_ru_mobile.ui.postSetup
 
 import android.content.Context
 import android.view.View
