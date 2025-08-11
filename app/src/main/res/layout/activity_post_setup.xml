@@ -159,17 +159,16 @@
                 android:layout_gravity="start"
                 android:layout_marginStart="16dp"/>
 
-            <Spinner
-                android:id="@+id/spinnerDeadline"
+            <Button
+                android:id="@+id/btnRecruitDeadline"
                 android:layout_width="120dp"
                 android:layout_height="45dp"
-                android:dropDownWidth="match_parent"
                 android:textColor="@color/sub_gray"
                 android:background="@drawable/bg_border_defualt"
                 android:layout_gravity="end"
                 android:overlapAnchor="false"
-                android:dropDownVerticalOffset="0dp"
-                android:popupBackground="@drawable/bg_spinner_dropdown"/>
+                android:text="날짜선택"/>
+
         </LinearLayout>
 
         <TextView
