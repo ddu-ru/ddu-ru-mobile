@@ -18,8 +18,8 @@ import com.example.ddu_ru_mobile.R
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.DialogFragment
 import com.example.ddu_ru_mobile.databinding.ActivityPostSetupBinding
-import com.example.ddu_ru_mobile.ui.postSetup.adapter.BoardSpinnerAdapter
 
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.CalendarMonth
@@ -436,5 +436,34 @@ class PostSetUpActivity: AppCompatActivity() {
                 Log.d("MyTag", "onNothingSelected")
             }
         }
+
+         //모집기간 바텀 팝업
+         fun modalWithRoundCorner() {
+             val modal = ModalBottomSheet()
+             modal.setStyle(DialogFragment.STYLE_NORMAL, R.style.RoundCornerBottomSheetDialogTheme)
+             modal.apply {
+                 onDatePicked = { date ->
+                     val pretty = date.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+                     postSetUpBinding.btnRecruitDeadline.text = pretty
+                     postSetUpBinding.btnRecruitDeadline.setTextColor(ContextCompat.getColor(this@PostSetUpActivity, R.color.main_color))
+                     postSetUpBinding.btnRecruitDeadline.setBackgroundResource(R.drawable.bg_border_selected)
+
+                 }
+             }.show(supportFragmentManager, ModalBottomSheet.TAG)
+         }
+
+        postSetUpBinding.btnRecruitDeadline.setOnClickListener{
+            modalWithRoundCorner()
+        }
+
+
+        // 성별 선택
+        postSetUpBinding.btnMale.setOnClickListener{
+
+        }
+        postSetUpBinding.btnFemale.setOnClickListener{
+
+        }
+        postSetUpBinding.btnGenderAny.setOnClickListener{}
     }
 }

@@ -8,4 +8,11 @@
         <item name="android:textStyle">bold</item>
         <item name="android:gravity">center</item>
     </style>
+    <style name="RoundCornerBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/RoundCornerModalStyle</item>
+    </style>
+
+    <style name="RoundCornerModalStyle" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="android:background">@drawable/bg_date_picker</item>
+    </style>
 </resources>
