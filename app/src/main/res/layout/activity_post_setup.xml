@@ -245,8 +245,13 @@
             android:valueFrom="0"
             android:valueTo="10"
             android:stepSize="2"
-            style="@style/RangeSliderStyle"
             app:materialThemeOverlay="@style/ThemeOverlay.MaterialComponents"
+            app:trackHeight="6dp"
+            app:labelBehavior="gone"
+            app:tickVisible="false"
+            app:trackColorActive="@color/coral_color"
+            app:trackColorInactive="@color/sub_gray"
+            app:haloRadius="0dp"
             app:backgroundTint="@null"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -287,15 +292,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.78" />
+                app:layout_constraintGuide_percent="0.77" />
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/g100"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.96" />
+                app:layout_constraintGuide_percent="0.94" />
 
-            <!-- 각 라벨을 해당 가이드라인에 ‘가로 중앙’ 고정 -->
             <TextView
                 android:id="@+id/age10"
                 android:layout_width="wrap_content"
@@ -303,7 +307,7 @@
                 android:gravity="start"
                 android:text="10대"
                 android:textSize="12sp"
-                android:textColor="@color/sub_gray"
+                android:textColor="@color/content_text_black"
                 app:layout_constraintStart_toStartOf="@id/g0"
                 app:layout_constraintEnd_toEndOf="@id/g0"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -314,7 +318,7 @@
                 android:layout_height="wrap_content"
                 android:text="20대"
                 android:textSize="12sp"
-                android:textColor="@color/sub_gray"
+                android:textColor="@color/content_text_black"
                 app:layout_constraintStart_toStartOf="@id/g20"
                 app:layout_constraintEnd_toEndOf="@id/g20"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -325,7 +329,7 @@
                 android:layout_height="wrap_content"
                 android:text="30대"
                 android:textSize="12sp"
-                android:textColor="@color/sub_gray"
+                android:textColor="@color/content_text_black"
                 app:layout_constraintStart_toStartOf="@id/g40"
                 app:layout_constraintEnd_toEndOf="@id/g40"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -336,7 +340,7 @@
                 android:layout_height="wrap_content"
                 android:text="40대"
                 android:textSize="12sp"
-                android:textColor="@color/sub_gray"
+                android:textColor="@color/content_text_black"
                 app:layout_constraintStart_toStartOf="@id/g60"
                 app:layout_constraintEnd_toEndOf="@id/g60"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -347,7 +351,7 @@
                 android:layout_height="wrap_content"
                 android:text="50대"
                 android:textSize="12sp"
-                android:textColor="@color/sub_gray"
+                android:textColor="@color/content_text_black"
                 app:layout_constraintStart_toStartOf="@id/g80"
                 app:layout_constraintEnd_toEndOf="@id/g80"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -356,9 +360,9 @@
                 android:id="@+id/age60"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="60대 이상"
+                android:text="60대이상"
                 android:textSize="12sp"
-                android:textColor="@color/sub_gray"
+                android:textColor="@color/content_text_black"
                 app:layout_constraintStart_toStartOf="@id/g100"
                 app:layout_constraintEnd_toEndOf="@id/g100"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -380,11 +384,47 @@
             android:valueFrom="0"
             android:valueTo="10"
             android:stepSize="0.0001"
-            style="@style/RangeSliderStyle"
             app:materialThemeOverlay="@style/ThemeOverlay.MaterialComponents"
             app:labelBehavior="gone"
+            app:trackHeight="6dp"
             app:backgroundTint="@null"
+            app:tickVisible="false"
+            app:haloRadius="0dp"
+            app:trackColorActive="@color/coral_color"
+            app:trackColorInactive="@color/sub_gray"
             />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/editTextBudgetMin"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:gravity="start"
+                android:layout_weight="1"
+                android:background="@drawable/bg_border_defualt"
+                android:padding="6dp"/>
+
+            <View
+                android:layout_width="100dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"/>
+
+            <EditText
+                android:id="@+id/editTextBudgetMax"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="10000000"
+                android:layout_weight="1"
+                android:background="@drawable/bg_border_defualt"
+                android:padding="6dp"/>
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/btnNext"
