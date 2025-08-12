@@ -2,7 +2,6 @@ package com.example.ddu_ru_mobile.ui.postSetup
 
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -32,6 +31,11 @@ import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.EditText
+import com.google.android.material.slider.RangeSlider
+import java.text.NumberFormat
 
 class PostSetUpActivity : AppCompatActivity() {
 
@@ -209,7 +213,7 @@ class PostSetUpActivity : AppCompatActivity() {
             }
         })
 
-        // Calendar
+        // ---------- Calendar ----------
         postSetUpBinding.calendarView.setup(startMonth, endMonth, firstDayOfWeek)
         postSetUpBinding.calendarView.scrollToMonth(currentMonth)
 
@@ -399,7 +403,7 @@ class PostSetUpActivity : AppCompatActivity() {
         // 캘린더 외 영역 터치 시 닫기
         postSetUpBinding.scrollView.hideIfTouchedOutside(postSetUpBinding.calendarWrapper)
 
-        // 인원수 스피너
+        // ---------- 인원수 스피너 ----------
         val recruitItems = resources.getStringArray(R.array.recruitArray)
         val recruitAdapter =
             BoardSpinnerAdapter(this, R.layout.spinner_item, R.id.spinnerText, recruitItems)
@@ -414,6 +418,7 @@ class PostSetUpActivity : AppCompatActivity() {
                     } else {
                         tv?.setTextColor(ContextCompat.getColor(this@PostSetUpActivity, R.color.main_color))
                         postSetUpBinding.spinnerRecruit.setBackgroundResource(R.drawable.bg_border_selected)
+                        (postSetUpBinding.spinnerRecruit.adapter as? BoardSpinnerAdapter)?.setSelectedPosition(position)
                     }
                     updateNextEnabled()
                 }
@@ -422,7 +427,7 @@ class PostSetUpActivity : AppCompatActivity() {
                 }
             }
 
-        // 모집기간 바텀시트
+        // ---------- 모집기간 바텀시트 ----------
         fun modalWithRoundCorner() {
             val modal = ModalBottomSheet()
             modal.setStyle(DialogFragment.STYLE_NORMAL, R.style.RoundCornerBottomSheetDialogTheme)
@@ -437,10 +442,102 @@ class PostSetUpActivity : AppCompatActivity() {
         }
         postSetUpBinding.btnRecruitDeadline.setOnClickListener { modalWithRoundCorner() }
 
-        // 성별 선택
+        // ---------- 성별 선택 ----------
         postSetUpBinding.btnMale.setOnClickListener { applyGenderSelection(Gender.MALE) }
         postSetUpBinding.btnFemale.setOnClickListener { applyGenderSelection(Gender.FEMALE) }
         postSetUpBinding.btnGenderAny.setOnClickListener { applyGenderSelection(Gender.ANY) }
+
+        // ---------- 나이 rangeSlider ----------
+        postSetUpBinding.ageSlider.setCustomThumbDrawable(R.drawable.ic_custom_thumb)
+
+        // ---------- 경비 rangeSlider ----------
+        postSetUpBinding.budgetSlider.setCustomThumbDrawable(R.drawable.ic_custom_thumb)
+
+        val slider = postSetUpBinding.budgetSlider
+        val etMin: EditText = postSetUpBinding.editTextBudgetMin
+        val etMax: EditText = postSetUpBinding.editTextBudgetMax
+
+        val PRICE_MIN = 0L
+        val PRICE_MAX = 10_000_000L
+        val SCALE = 1_000_000f
+        val STEP = 100L
+
+        val formatter: NumberFormat = NumberFormat.getInstance(java.util.Locale.KOREA)
+
+        fun clampPrice(p: Long): Long = p.coerceIn(PRICE_MIN, PRICE_MAX)
+        fun roundStep(p: Long): Long = (p / STEP) * STEP
+        fun toPrice(v: Float): Long = (v * SCALE).toLong()
+        fun toSlider(p: Long): Float = (p.toFloat() / SCALE).coerceIn(0f, 10f)
+        fun parsePrice(cs: CharSequence?): Long {
+            val digits = cs?.toString()?.replace("[^0-9]".toRegex(), "") ?: return 0L
+            return digits.toLongOrNull() ?: 0L
+        }
+        fun setEtFormatted(et: EditText, value: Long, watcher: TextWatcher?) {
+            watcher?.let { et.removeTextChangedListener(it) }
+            val formatted = formatter.format(value)
+            et.setText(formatted)
+            et.setSelection(et.text.length)
+            watcher?.let { et.addTextChangedListener(it) }
+        }
+
+        var syncingFromSlider = false
+        var syncingFromEdit = false
+
+        var minWatcher: TextWatcher? = null
+        var maxWatcher: TextWatcher? = null
+
+        slider.addOnChangeListener(RangeSlider.OnChangeListener { s, _, fromUser ->
+            if (!fromUser || syncingFromEdit) return@OnChangeListener
+            syncingFromSlider = true
+            val minP = roundStep(clampPrice(toPrice(s.values[0])))
+            val maxP = roundStep(clampPrice(toPrice(s.values[1])))
+            setEtFormatted(etMin, minP, minWatcher)
+            setEtFormatted(etMax, maxP, maxWatcher)
+            syncingFromSlider = false
+        })
+
+        minWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                if (syncingFromSlider) return
+                syncingFromEdit = true
+                val minP = roundStep(clampPrice(parsePrice(s)))
+                val maxP = roundStep(clampPrice(parsePrice(etMax.text)))
+                val fixedMin = minP.coerceAtMost(maxP)
+                slider.setValues(toSlider(fixedMin), toSlider(maxP))
+                setEtFormatted(etMin, fixedMin, this)
+                syncingFromEdit = false
+            }
+        }
+        etMin.addTextChangedListener(minWatcher)
+
+        maxWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                if (syncingFromSlider) return
+                syncingFromEdit = true
+                val minP = roundStep(clampPrice(parsePrice(etMin.text)))
+                val maxP = roundStep(clampPrice(parsePrice(s)))
+                val fixedMax = maxP.coerceAtLeast(minP)
+                slider.setValues(toSlider(minP), toSlider(fixedMax))
+                setEtFormatted(etMax, fixedMax, this)
+                syncingFromEdit = false
+            }
+        }
+        etMax.addTextChangedListener(maxWatcher)
+
+        run {
+            val initMin = roundStep(clampPrice(parsePrice(etMin.text)))
+            val initMax = roundStep(clampPrice(parsePrice(etMax.text)))
+            val minP = kotlin.math.min(initMin, initMax)
+            val maxP = kotlin.math.max(initMin, initMax)
+            slider.setValues(toSlider(minP), toSlider(maxP))
+            setEtFormatted(etMin, minP, minWatcher)
+            setEtFormatted(etMax, maxP, maxWatcher)
+        }
+
 
         // 초기 상태 반영
         updateNextEnabled()
