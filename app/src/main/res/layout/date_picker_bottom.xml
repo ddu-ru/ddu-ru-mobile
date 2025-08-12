@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@drawable/bg_date_picker"
-    android:padding="10dp"
-    android:elevation="8dp">
+    android:padding="10dp">
 
     <DatePicker
         android:id="@+id/datePicker"
@@ -15,8 +15,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:calendarViewShown="false"
-        android:layout_gravity="center"
-        android:background="@android:color/transparent" />
+        android:layout_gravity="center" />
 
     <Button
         android:id="@+id/btnConfirm"
@@ -25,6 +24,7 @@
         android:background="@drawable/bg_border_selected"
         android:text="완료"
         android:textColor="@color/main_color"
-        android:layout_marginBottom="8dp"/>
+        app:backgroundTint="@null"
+        android:layout_marginBottom="8dp" />
 
 </LinearLayout>
