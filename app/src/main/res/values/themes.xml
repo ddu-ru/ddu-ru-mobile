@@ -1,36 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Ddurumobile" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Primary 색상 -->
-        <item name="colorPrimary">@color/main_color</item>
-        <item name="colorPrimaryVariant">@color/main_color</item>
-        <item name="colorOnPrimary">@color/white</item>
-        
-        <!-- Secondary 색상 -->
-        <item name="colorSecondary">@color/text_blue</item>
-        <item name="colorSecondaryVariant">@color/text_blue</item>
-        <item name="colorOnSecondary">@color/white</item>
-        
-        <!-- Surface 색상 -->
-        <item name="colorSurface">@color/white</item>
-        <item name="colorOnSurface">@color/content_text_black</item>
-        
-        <!-- Error 색상 -->
-        <item name="colorError">@color/focus_color</item>
-        <item name="colorOnError">@color/white</item>
-        
-        <!-- 상태바 색상 -->
-        <item name="android:statusBarColor">@color/main_color</item>
-        <item name="android:windowLightStatusBar">false</item>
-        
-        <!-- 머티리얼 컴포넌트 기본 색상 오버라이드 -->
-        <item name="colorPrimarySurface">@color/main_color</item>
-        <item name="colorOnPrimarySurface">@color/white</item>
-        <item name="colorSurfaceVariant">@color/sub_gray</item>
-        <item name="colorOnSurfaceVariant">@color/content_text_black</item>
-        <item name="colorOutline">@color/sub_gray</item>
-        <item name="colorOutlineVariant">@color/sub_gray</item>
+    <style name="Theme.Ddurumobile" parent="Theme.MaterialComponents.Light.NoActionBar">
     </style>
 
 </resources>
