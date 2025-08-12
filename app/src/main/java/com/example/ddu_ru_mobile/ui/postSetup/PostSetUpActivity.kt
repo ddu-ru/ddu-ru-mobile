@@ -154,7 +154,7 @@ class PostSetUpActivity : AppCompatActivity() {
     }
     private fun Button.asDefault() {
         setTextColor(ContextCompat.getColor(this@PostSetUpActivity, R.color.sub_gray))
-        setBackgroundResource(R.drawable.bg_border_defualt) // 파일명 그대로 사용
+        setBackgroundResource(R.drawable.bg_border_defualt)
     }
     private fun Button.ifSelectedThen(isSel: Boolean) {
         if (isSel) asSelected() else asDefault()
@@ -182,8 +182,8 @@ class PostSetUpActivity : AppCompatActivity() {
 
         postSetUpBinding.btnNext.isEnabled = allOk
         if (allOk) {
-            postSetUpBinding.btnNext.setTextColor(ContextCompat.getColor(this, R.color.main_color))
-            postSetUpBinding.btnNext.setBackgroundResource(R.drawable.bg_border_selected)
+            postSetUpBinding.btnNext.setTextColor(ContextCompat.getColor(this, R.color.white))
+            postSetUpBinding.btnNext.setBackgroundResource(R.drawable.bg_selected_day)
         } else {
             postSetUpBinding.btnNext.setTextColor(ContextCompat.getColor(this, R.color.sub_gray))
             postSetUpBinding.btnNext.setBackgroundResource(R.drawable.bg_border_defualt)
@@ -408,6 +408,7 @@ class PostSetUpActivity : AppCompatActivity() {
         val recruitAdapter =
             BoardSpinnerAdapter(this, R.layout.spinner_item, R.id.spinnerText, recruitItems)
         postSetUpBinding.spinnerRecruit.adapter = recruitAdapter
+
         postSetUpBinding.spinnerRecruit.setSelection(postSetUpBinding.spinnerRecruit.adapter.count)
         postSetUpBinding.spinnerRecruit.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
