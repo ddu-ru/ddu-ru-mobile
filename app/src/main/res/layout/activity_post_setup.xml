@@ -78,7 +78,8 @@
                 android:text="출발일"
                 android:textColor="@color/sub_gray"
                 android:layout_marginEnd="10dp"
-                android:background="@drawable/bg_border_defualt"/>
+                android:background="@drawable/bg_border_defualt"
+                app:backgroundTint="@null"/>
             <Button
                 android:id="@+id/btnArrivalDate"
                 android:layout_width="wrap_content"
@@ -87,7 +88,8 @@
                 android:text="도착일"
                 android:textColor="@color/sub_gray"
                 android:layout_marginStart="10dp"
-                android:background="@drawable/bg_border_defualt"/>
+                android:background="@drawable/bg_border_defualt"
+                app:backgroundTint="@null"/>
 
         </LinearLayout>
 
@@ -127,7 +129,8 @@
                 android:gravity="center_vertical"
                 android:textColor="@color/content_text_black"
                 android:layout_gravity="start"
-                android:layout_marginStart="16dp"/>
+                android:layout_marginStart="16dp"
+                app:backgroundTint="@null"/>
 
             <Spinner
                 android:id="@+id/spinnerRecruit"
@@ -163,11 +166,12 @@
                 android:id="@+id/btnRecruitDeadline"
                 android:layout_width="120dp"
                 android:layout_height="45dp"
-                android:textColor="@color/sub_gray"
-                android:background="@drawable/bg_border_defualt"
                 android:layout_gravity="end"
+                android:background="@drawable/bg_border_defualt"
                 android:overlapAnchor="false"
-                android:text="날짜선택"/>
+                android:text="날짜선택"
+                android:textColor="@color/sub_gray"
+                app:backgroundTint="@null" />
 
         </LinearLayout>
 
@@ -195,7 +199,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:layout_marginEnd="10dp"
-                android:background="@drawable/bg_border_defualt"/>
+                android:background="@drawable/bg_border_defualt"
+                app:backgroundTint="@null"/>
 
             <Button
                 android:id="@+id/btnFemale"
@@ -207,7 +212,8 @@
                 android:gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:background="@drawable/bg_border_defualt"/>
+                android:background="@drawable/bg_border_defualt"
+                app:backgroundTint="@null"/>
 
             <Button
                 android:id="@+id/btnGenderAny"
@@ -218,7 +224,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:layout_marginStart="10dp"
-                android:background="@drawable/bg_border_defualt"/>
+                android:background="@drawable/bg_border_defualt"
+                app:backgroundTint="@null"/>
 
         </LinearLayout>
 
@@ -230,10 +237,71 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"/>
 
-<!--        <com.google.android.material.slider.RangeSlider-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            />-->
+        <com.google.android.material.slider.RangeSlider
+            android:id="@+id/ageSlider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:values="@array/age_slider_values"
+            android:valueFrom="0"
+            android:valueTo="10"
+            android:stepSize="2"
+            style="@style/RangeSliderStyle"
+            app:materialThemeOverlay="@style/ThemeOverlay.MaterialComponents"
+            app:backgroundTint="@null"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="20대"
+                android:gravity="center"
+                android:textColor="@color/sub_gray"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="30대"
+                android:gravity="center"
+                android:textColor="@color/sub_gray"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="40대"
+                android:gravity="center"
+                android:textColor="@color/sub_gray"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="50대"
+                android:gravity="center"
+                android:textColor="@color/sub_gray"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="60대"
+                android:gravity="center"
+                android:textColor="@color/sub_gray"
+                android:textSize="12sp"/>
+
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -243,10 +311,19 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"/>
 
-<!--        <com.google.android.material.slider.RangeSlider-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            />-->
+        <com.google.android.material.slider.RangeSlider
+            android:id="@+id/budgetSlider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:values="@array/age_slider_values"
+            android:valueFrom="0"
+            android:valueTo="10"
+            android:stepSize="0.0001"
+            style="@style/RangeSliderStyle"
+            app:materialThemeOverlay="@style/ThemeOverlay.MaterialComponents"
+            app:labelBehavior="gone"
+            app:backgroundTint="@null"
+            />
 
         <Button
             android:id="@+id/btnNext"
@@ -256,7 +333,8 @@
             android:textColor="@color/sub_gray"
             android:layout_marginTop="24dp"
             android:gravity="center"
-            android:background="@drawable/bg_border_defualt"/>
+            android:background="@drawable/bg_border_defualt"
+            app:backgroundTint="@null"/>
 
 
     </LinearLayout>
