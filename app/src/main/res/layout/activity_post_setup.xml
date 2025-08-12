@@ -247,61 +247,122 @@
             android:stepSize="2"
             style="@style/RangeSliderStyle"
             app:materialThemeOverlay="@style/ThemeOverlay.MaterialComponents"
-            app:backgroundTint="@null"
-            />
+            app:backgroundTint="@null"/>
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ageLabels"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp">
+            app:layout_constraintStart_toStartOf="@id/ageSlider"
+            app:layout_constraintEnd_toEndOf="@id/ageSlider"
+            app:layout_constraintTop_toBottomOf="@id/ageSlider">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/g0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.04"
+                android:background="#00FF00"/>
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/g20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.21" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/g40"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.40" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/g60"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.58" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/g80"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.78" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/g100"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.96" />
+
+            <!-- 각 라벨을 해당 가이드라인에 ‘가로 중앙’ 고정 -->
+            <TextView
+                android:id="@+id/age10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="10대"
+                android:textSize="12sp"
+                android:textColor="@color/sub_gray"
+                app:layout_constraintStart_toStartOf="@id/g0"
+                app:layout_constraintEnd_toEndOf="@id/g0"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
-                android:layout_width="0dp"
+                android:id="@+id/age20"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="20대"
-                android:gravity="center"
+                android:textSize="12sp"
                 android:textColor="@color/sub_gray"
-                android:textSize="12sp"/>
+                app:layout_constraintStart_toStartOf="@id/g20"
+                app:layout_constraintEnd_toEndOf="@id/g20"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
-                android:layout_width="0dp"
+                android:id="@+id/age30"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="30대"
-                android:gravity="center"
+                android:textSize="12sp"
                 android:textColor="@color/sub_gray"
-                android:textSize="12sp"/>
+                app:layout_constraintStart_toStartOf="@id/g40"
+                app:layout_constraintEnd_toEndOf="@id/g40"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
-                android:layout_width="0dp"
+                android:id="@+id/age40"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="40대"
-                android:gravity="center"
+                android:textSize="12sp"
                 android:textColor="@color/sub_gray"
-                android:textSize="12sp"/>
+                app:layout_constraintStart_toStartOf="@id/g60"
+                app:layout_constraintEnd_toEndOf="@id/g60"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
-                android:layout_width="0dp"
+                android:id="@+id/age50"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="50대"
-                android:gravity="center"
+                android:textSize="12sp"
                 android:textColor="@color/sub_gray"
-                android:textSize="12sp"/>
+                app:layout_constraintStart_toStartOf="@id/g80"
+                app:layout_constraintEnd_toEndOf="@id/g80"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
-                android:layout_width="0dp"
+                android:id="@+id/age60"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="60대"
-                android:gravity="center"
+                android:text="60대 이상"
+                android:textSize="12sp"
                 android:textColor="@color/sub_gray"
-                android:textSize="12sp"/>
-
-        </LinearLayout>
+                app:layout_constraintStart_toStartOf="@id/g100"
+                app:layout_constraintEnd_toEndOf="@id/g100"
+                app:layout_constraintTop_toTopOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:layout_width="wrap_content"
