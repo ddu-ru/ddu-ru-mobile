@@ -8,11 +8,36 @@
         <item name="android:textStyle">bold</item>
         <item name="android:gravity">center</item>
     </style>
-    <style name="RoundCornerBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/RoundCornerModalStyle</item>
+    <!-- styles.xml -->
+    <style name="RoundCornerModalStyle" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="shapeAppearance">@style/ShapeAppearance.RoundedTop16</item>
+        <item name="backgroundTint">@android:color/transparent</item> <!-- 컨테이너 투명 -->
     </style>
 
-    <style name="RoundCornerModalStyle" parent="ThemeOverlay.Material3.BottomSheetDialog">
-        <item name="android:background">@drawable/bg_date_picker</item>
+    <style name="RoundCornerBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/RoundCornerModalStyle</item> <!-- ★ 주석 해제 필수 -->
     </style>
+
+    <style name="ShapeAppearance.RoundedTop16" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">16dp</item>
+        <item name="cornerSizeTopRight">16dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
+    <style name="RangeSliderStyle" parent="Widget.MaterialComponents.Slider">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Slider</item>
+    </style>
+
+    <style name="ThemeOverlay.Slider" parent="ThemeOverlay.MaterialComponents">
+        <item name="colorOnPrimary">@color/focus_color</item>
+        <item name="colorOnBackground">@color/white</item>
+        <item name="colorSurface">@color/main_color</item>
+    </style>
+
+    <style name="RangeSliderLabelText" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textColor">@android:color/primary_text_dark</item>
+    </style>
+
 </resources>
