@@ -21,16 +21,18 @@ class BoardSpinnerAdapter (context: Context, private val resId:Int, private val 
         val view = super.getView(position, convertView, parent)
         val textView = view.findViewById<TextView>(textId)
 
+        textView.setTextColor(ContextCompat.getColor(context, R.color.sub_gray))
+
         if (position == count) {
             textView.text = ""
             textView.hint = getItem(super.getCount() - 1) // 마지막 항목을 hint로
+            textView.setTextColor(ContextCompat.getColor(context, R.color.sub_gray))
         } else {
             textView.text = getItem(position)
             if (position == selectedPosition) {
                 textView.setTextColor(ContextCompat.getColor(context, R.color.main_color))
             }
         }
-
         return view
     }
 
