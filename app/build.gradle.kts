@@ -1,3 +1,4 @@
+
 import java.util.Properties
 
 plugins {
@@ -63,20 +64,9 @@ protobuf {
     protoc {
         artifact = libs.protobuf.compiler.get().toString()
     }
-    
-    generateProtoTasks {
-        all().each { task ->
-            task.builtins {
-                java {
-                    option("lite")
-                }
-            }
-        }
-    }
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
