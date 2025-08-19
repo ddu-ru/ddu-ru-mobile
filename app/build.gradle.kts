@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.protobuf)
 }
 configurations.all {
     exclude(group = "com.intellij", module = "annotations")
@@ -58,6 +59,22 @@ android {
     }
 }
 
+protobuf {
+    protoc {
+        artifact = libs.protobuf.compiler.get().toString()
+    }
+    
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                java {
+                    option("lite")
+                }
+            }
+        }
+    }
+}
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -80,11 +97,13 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.appcompat)
-    implementation("androidx.cardview:cardview:1.0.0")
-    implementation ("androidx.credentials:credentials:1.5.0")
-    implementation ("com.google.android.libraries.identity.googleid:googleid:1.1.1")
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation(libs.androidx.cardview)
+    implementation(libs.androidx.credentials)
+    implementation(libs.google.identity.googleid)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.androidx.datastore.core)
+    implementation(libs.protobuf.javalite)
 }
 
 

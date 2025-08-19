@@ -139,21 +139,12 @@ object GoogleLoginHelper {
             }
 
 
-            Log.d("GoogleLogin", "Intent Action: ${data.action}")
-            Log.d("GoogleLogin", "Intent Data: ${data.dataString}")
-            Log.d("GoogleLogin", "Intent Extras 크기: ${data.extras?.size() ?: 0}")
-
 
             try {
                 val credential = oneTapClient.getSignInCredentialFromIntent(data)
                 val idToken = credential.googleIdToken
 
                 if (idToken != null) {
-                    Log.d("GoogleLogin", "=== ID Token 상세 정보 ===")
-                    Log.d("GoogleLogin", "ID Token 전체: $idToken")
-                    Log.d("GoogleLogin", "ID Token 길이: ${idToken.length}")
-                    Log.d("GoogleLogin", "ID Token 시작 부분: ${idToken.take(50)}...")
-                    Log.d("GoogleLogin", "ID Token 끝 부분: ...${idToken.takeLast(50)}")
                     Log.d(
                             "GoogleLogin",
                             "ID Token 형식 확인: ${if (idToken.contains(".")) "올바른 JWT 형식" else "잘못된 형식"}"
