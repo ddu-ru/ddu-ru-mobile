@@ -29,7 +29,7 @@ android {
             localProperties.load(localPropertiesFile.inputStream())
 
             //noinspection WrongGradleMethod
-            listOf("GOOGLE_CLIENT_ID", "BASE_URL").forEach { key ->
+            listOf("GOOGLE_CLIENT_ID", "BASE_URL","WEB_CLIENT_ID").forEach { key ->
                 localProperties.getProperty(key)?.let { value ->
                     this@defaultConfig.buildConfigField("String", key, "\"$value\"")
                 }

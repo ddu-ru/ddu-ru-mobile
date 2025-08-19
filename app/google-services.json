@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "473134570377",
+    "project_id": "ddu-ru-467010",
+    "storage_bucket": "ddu-ru-467010.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:473134570377:android:f63b36529f5fd66bd21f58",
+        "android_client_info": {
+          "package_name": "com.gildongmu.ddu_ru_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "473134570377-kk52ld2t7pr9ecc3ds8vkkakegijspul.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gildongmu.ddu_ru_mobile",
+            "certificate_hash": "15209f210a7009cac0b09f0a8aaf3fe8b535625c"
+          }
+        },
+        {
+          "client_id": "473134570377-l63ootjuiohq69chd9s80c2bkjihfmpj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClXmBWImYcomDl9lBSdglZGlcsU6e_aWc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "473134570377-l63ootjuiohq69chd9s80c2bkjihfmpj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

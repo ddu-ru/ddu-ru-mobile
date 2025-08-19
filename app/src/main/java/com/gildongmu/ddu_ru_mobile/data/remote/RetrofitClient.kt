@@ -7,7 +7,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
 //    //Todo : 백엔드 API로 수정 필요
-//    private const val BASE_URL = BuildConfig.BASE_URL
 private const val BASE_URL = BuildConfig.BASE_URL
 
     private val retrofit: Retrofit = Retrofit.Builder()
