@@ -1,4 +1,4 @@
-package com.example.ddu_ru_mobile.ui.postSetup
+package com.example.ddu_ru_mobile.ui.post
 
 import android.graphics.Rect
 import android.os.Bundle
@@ -34,12 +34,14 @@ import java.util.Locale
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
+import com.example.ddu_ru_mobile.databinding.ActivityPostContentBinding
 import com.google.android.material.slider.RangeSlider
 import java.text.NumberFormat
 
 class PostSetUpActivity : AppCompatActivity() {
 
     private lateinit var postSetUpBinding: ActivityPostSetupBinding
+    private lateinit var postContentBinding: ActivityPostContentBinding
 
     private val startMonth = YearMonth.now().minusMonths(100)
     private val endMonth = YearMonth.now().plusMonths(100)

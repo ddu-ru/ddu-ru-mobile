@@ -1,4 +1,4 @@
-package com.example.ddu_ru_mobile.ui.postSetup
+package com.example.ddu_ru_mobile.ui.post
 
 import android.os.Bundle
 import android.view.LayoutInflater
