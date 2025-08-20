@@ -1,3 +1,5 @@
+package com.gildongmu.ddu_ru_mobile.data.datastore
+
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
 import com.gildongmu.ddu_ru_mobile.proto.AuthToken

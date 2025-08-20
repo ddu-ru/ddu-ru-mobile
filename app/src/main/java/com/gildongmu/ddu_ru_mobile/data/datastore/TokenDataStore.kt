@@ -1,15 +1,16 @@
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
+import com.gildongmu.ddu_ru_mobile.data.datastore.TokenPreferencesSerializer
 import com.gildongmu.ddu_ru_mobile.proto.AuthToken
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 
 val Context.authTokenStore: DataStore<AuthToken> by
-        dataStore(
-                fileName = "auth_tokens.pb",
-                serializer = TokenPreferencesSerializer // Serializer<AuthToken>
-        )
+dataStore(
+    fileName = "auth_tokens.pb",
+    serializer = TokenPreferencesSerializer // Serializer<AuthToken>
+)
 
 class TokenDataStore(private val context: Context) {
 
