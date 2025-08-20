@@ -64,6 +64,16 @@ protobuf {
     protoc {
         artifact = libs.protobuf.compiler.get().toString()
     }
+    
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                create("java") {
+                    option("lite")
+                }
+            }
+        }
+    }
 }
 
 dependencies {

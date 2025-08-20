@@ -1,6 +1,8 @@
 package com.gildongmu.ddu_ru_mobile.ui
 
 
+import TokenDataStore
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
@@ -20,6 +22,7 @@ import kotlinx.coroutines.launch
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var googleSignInLauncher: ActivityResultLauncher<IntentSenderRequest>
+    private val tokenStore by lazy { TokenDataStore(applicationContext) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +52,13 @@ class LoginActivity : AppCompatActivity() {
                                     LoginRequest(idToken)
                                 )
                                 Log.d("LoginActivity", "로그인 성공: $response")
+                                val access = response.accessToken
+                                val refresh = response.refreshToken
+
+
+                                tokenStore.saveTokens(access, refresh)
+                                startActivity(Intent(this@LoginActivity, TokenDebugActivity::class.java))
+
 
                                 // TODO: SharedPreferences에 accessToken 저장, 홈 화면 이동 등
                             } catch (e: Exception) {
