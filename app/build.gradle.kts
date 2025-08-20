@@ -31,13 +31,14 @@ android {
             localProperties.load(localPropertiesFile.inputStream())
 
             //noinspection WrongGradleMethod
-            listOf("GOOGLE_CLIENT_ID", "BASE_URL","WEB_CLIENT_ID").forEach { key ->
+            listOf("GOOGLE_CLIENT_ID", "BASE_URL","GOOGLE_WEB_CLIENT_ID","KAKAO_NATIVE_APP_KEY","MANIFEST_KAKAO_NATIVE_APP_KEY").forEach { key ->
                 localProperties.getProperty(key)?.let { value ->
                     this@defaultConfig.buildConfigField("String", key, "\"$value\"")
                 }
             }
         }
     }
+
 
     buildTypes {
         release {
@@ -49,11 +50,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -63,6 +64,16 @@ android {
 protobuf {
     protoc {
         artifact = libs.protobuf.compiler.get().toString()
+    }
+    
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                create("java") {
+                    option("lite")
+                }
+            }
+        }
     }
 }
 
@@ -94,6 +105,7 @@ dependencies {
     implementation(libs.retrofit.converter.gson)
     implementation(libs.androidx.datastore.core)
     implementation(libs.protobuf.javalite)
+    implementation(libs.androidx.datastore)
 }
 
 

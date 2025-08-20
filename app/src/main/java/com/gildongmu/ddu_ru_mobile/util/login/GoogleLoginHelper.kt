@@ -34,7 +34,7 @@ object GoogleLoginHelper {
             Log.d("GoogleLogin", "BeginSignInRequest 설정 시작...")
             Log.d("GoogleLogin", "Android Client ID: $clientId")
 
-            val webClientId = BuildConfig.WEB_CLIENT_ID
+            val webClientId = BuildConfig.GOOGLE_WEB_CLIENT_ID
             Log.d("GoogleLogin", "Web Client ID: $webClientId")
 
             if (webClientId.isBlank() || webClientId == "your_web_client_id_here") {
