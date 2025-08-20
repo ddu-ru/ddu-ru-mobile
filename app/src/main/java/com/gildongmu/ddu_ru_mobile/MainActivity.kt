@@ -9,7 +9,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //LoginActivity를 띄움
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
     }
