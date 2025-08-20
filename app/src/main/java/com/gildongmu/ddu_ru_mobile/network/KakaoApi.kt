@@ -7,7 +7,7 @@ import retrofit2.http.Headers
 import retrofit2.http.POST
 
 interface KakaoApi {
-    @POST("/api/v1/auth/kakao")
+    @POST("/auth/kakao")
     @Headers("Content-Type:application/json")
     suspend fun socialLogin(@Body user: KakaoLoginRequest): KakaoLoginResponse
 }
