@@ -1,4 +1,3 @@
-
 import java.util.Properties
 
 plugins {
@@ -7,15 +6,15 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.protobuf)
 }
-configurations.all {
-    exclude(group = "com.intellij", module = "annotations")
-}
 
 android {
     namespace = "com.gildongmu.ddu_ru_mobile"
     compileSdk = 35
+
     buildFeatures {
+        compose = true
         buildConfig = true
+        viewBinding = true
     }
 
     defaultConfig {
@@ -27,16 +26,19 @@ android {
 
         val localProperties = Properties()
         val localPropertiesFile = rootProject.file("local.properties")
+        val KakaoNativeAppKey = localProperties.getProperty("KAKAO_NATIVE_APP_KEY")?:""
+
         if (localPropertiesFile.exists()) {
             localProperties.load(localPropertiesFile.inputStream())
 
             //noinspection WrongGradleMethod
-            listOf("GOOGLE_CLIENT_ID", "BASE_URL","GOOGLE_WEB_CLIENT_ID","KAKAO_NATIVE_APP_KEY","MANIFEST_KAKAO_NATIVE_APP_KEY").forEach { key ->
+            listOf("GOOGLE_CLIENT_ID", "BASE_URL","GOOGLE_WEB_CLIENT_ID","KAKAO_NATIVE_APP_KEY").forEach { key ->
                 localProperties.getProperty(key)?.let { value ->
                     this@defaultConfig.buildConfigField("String", key, "\"$value\"")
                 }
             }
         }
+        manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = KakaoNativeAppKey
     }
 
 
@@ -48,6 +50,14 @@ android {
                 "proguard-rules.pro"
             )
         }
+        compileOptions {
+            sourceCompatibility = JavaVersion.VERSION_1_8
+            targetCompatibility = JavaVersion.VERSION_1_8
+        }
+
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -55,9 +65,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = "17"
-    }
-    buildFeatures {
-        compose = true
     }
 }
 
@@ -88,16 +95,12 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.media3.common.ktx)
-    implementation(libs.androidx.room.compiler)
     implementation(libs.play.services.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.cardview)
     implementation(libs.androidx.credentials)
     implementation(libs.google.identity.googleid)
@@ -106,6 +109,8 @@ dependencies {
     implementation(libs.androidx.datastore.core)
     implementation(libs.protobuf.javalite)
     implementation(libs.androidx.datastore)
+    implementation("com.kakao.sdk:v2-user:2.20.1")
+    implementation("com.kakao.sdk:v2-share:2.20.1")
+    implementation("com.kakao.sdk:v2-talk:2.20.1")
+    implementation("com.kakao.sdk:v2-cert:2.20.1")
 }
-
-

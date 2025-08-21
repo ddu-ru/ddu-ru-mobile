@@ -1,7 +1,5 @@
 package com.gildongmu.ddu_ru_mobile.ui
 
-
-
 import TokenDataStore
 import android.content.Intent
 import android.os.Bundle
@@ -13,6 +11,7 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.gildongmu.ddu_ru_mobile.BuildConfig
 import com.gildongmu.ddu_ru_mobile.R
 import com.gildongmu.ddu_ru_mobile.data.model.request.LoginRequest
 import com.gildongmu.ddu_ru_mobile.data.remote.RetrofitClient
@@ -35,6 +34,8 @@ class LoginActivity : AppCompatActivity() {
 
         kakaoBtn.setOnClickListener {
             KakaoLoginHelper.kakaoLogin(this)
+            Log.d("KakaoAppKey", "KAKAO_NATIVE_APP_KEY: ${BuildConfig.KAKAO_NATIVE_APP_KEY}")
+
         }
 
         googleSignInLauncher = registerForActivityResult(

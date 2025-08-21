@@ -3,6 +3,8 @@
 /local.properties
 /.idea/caches
 /.idea/libraries
+/.idea/appInsightsSettings.xml
+/.idea/inspectionProfiles/Project_Default.xml
 /.idea/modules.xml
 /.idea/workspace.xml
 /.idea/navEditor.xml
