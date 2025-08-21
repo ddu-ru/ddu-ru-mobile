@@ -1,9 +1,8 @@
-package com.example.ddu_ru_mobile.ui.post
+package com.gildongmu.ddu_ru_mobile.ui.post
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.ddu_ru_mobile.databinding.ActivityPostContentBinding
-import com.example.ddu_ru_mobile.databinding.ActivityPostSetupBinding
+import com.gildongmu.ddu_ru_mobile.databinding.ActivityPostContentBinding
 
 class PostContentActivity : AppCompatActivity()  {
     private lateinit var postContentBinding: ActivityPostContentBinding

@@ -1,4 +1,4 @@
-package com.example.ddu_ru_mobile.ui.post
+package com.gildongmu.ddu_ru_mobile.ui.post
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.DatePicker
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.example.ddu_ru_mobile.R
+import com.gildongmu.ddu_ru_mobile.R
 import java.time.LocalDate
 
 

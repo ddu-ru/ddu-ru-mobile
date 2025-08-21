@@ -1,4 +1,4 @@
-package com.example.ddu_ru_mobile.ui.post
+package com.gildongmu.ddu_ru_mobile.ui.post
 
 import android.graphics.Rect
 import android.os.Bundle
@@ -18,8 +18,8 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
-import com.example.ddu_ru_mobile.R
-import com.example.ddu_ru_mobile.databinding.ActivityPostSetupBinding
+import com.gildongmu.ddu_ru_mobile.R
+import com.gildongmu.ddu_ru_mobile.databinding.ActivityPostSetupBinding
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.CalendarMonth
 import com.kizitonwose.calendar.core.DayPosition
@@ -34,7 +34,7 @@ import java.util.Locale
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
-import com.example.ddu_ru_mobile.databinding.ActivityPostContentBinding
+import com.gildongmu.ddu_ru_mobile.databinding.ActivityPostContentBinding
 import com.google.android.material.slider.RangeSlider
 import java.text.NumberFormat
 
