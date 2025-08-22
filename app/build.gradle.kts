@@ -26,7 +26,6 @@ android {
 
         val localProperties = Properties()
         val localPropertiesFile = rootProject.file("local.properties")
-        val KakaoNativeAppKey = localProperties.getProperty("KAKAO_NATIVE_APP_KEY")?:""
 
         if (localPropertiesFile.exists()) {
             localProperties.load(localPropertiesFile.inputStream())
@@ -35,10 +34,13 @@ android {
             listOf("GOOGLE_CLIENT_ID", "BASE_URL","GOOGLE_WEB_CLIENT_ID","KAKAO_NATIVE_APP_KEY").forEach { key ->
                 localProperties.getProperty(key)?.let { value ->
                     this@defaultConfig.buildConfigField("String", key, "\"$value\"")
+
+                    if (key == "KAKAO_NATIVE_APP_KEY") {
+                        manifestPlaceholders[key] = value
+                    }
                 }
             }
         }
-        manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = KakaoNativeAppKey
     }
 
 
