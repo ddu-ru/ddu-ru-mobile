@@ -185,7 +185,7 @@ class PostSetUpActivity : AppCompatActivity() {
         postSetUpBinding.btnNext.isEnabled = allOk
         if (allOk) {
             postSetUpBinding.btnNext.setTextColor(ContextCompat.getColor(this, R.color.white))
-            postSetUpBinding.btnNext.setBackgroundResource(R.drawable.bg_selected_day)
+            postSetUpBinding.btnNext.setBackgroundResource(R.drawable.bg_filled_selected)
         } else {
             postSetUpBinding.btnNext.setTextColor(ContextCompat.getColor(this, R.color.sub_gray))
             postSetUpBinding.btnNext.setBackgroundResource(R.drawable.bg_border_defualt)
@@ -263,7 +263,7 @@ class PostSetUpActivity : AppCompatActivity() {
                     // 기본 스타일
                     if (day.position == DayPosition.MonthDate) {
                         tv.setTextColor(getColor(R.color.title_text_black))
-                        tv.background = ContextCompat.getDrawable(this@PostSetUpActivity, R.drawable.bg_default_day)
+                        tv.background = ContextCompat.getDrawable(this@PostSetUpActivity, R.drawable.bg_filled_default)
                     } else {
                         tv.setTextColor(getColor(R.color.sub_gray))
                         tv.background = null
@@ -274,11 +274,11 @@ class PostSetUpActivity : AppCompatActivity() {
                     val end = selectedEndDate
                     when {
                         start != null && start == day.date -> {
-                            tv.background = ContextCompat.getDrawable(this@PostSetUpActivity, R.drawable.bg_selected_day)
+                            tv.background = ContextCompat.getDrawable(this@PostSetUpActivity, R.drawable.bg_filled_selected)
                             tv.setTextColor(ContextCompat.getColor(this@PostSetUpActivity, R.color.white))
                         }
                         end != null && end == day.date -> {
-                            tv.background = ContextCompat.getDrawable(this@PostSetUpActivity, R.drawable.bg_selected_day)
+                            tv.background = ContextCompat.getDrawable(this@PostSetUpActivity, R.drawable.bg_filled_selected)
                             tv.setTextColor(ContextCompat.getColor(this@PostSetUpActivity, R.color.white))
                         }
                         start != null && end != null && (day.date > start && day.date < end) -> {
@@ -292,7 +292,7 @@ class PostSetUpActivity : AppCompatActivity() {
                         else -> {
                             if (day.position == DayPosition.MonthDate) {
                                 tv.setTextColor(ContextCompat.getColor(this@PostSetUpActivity, R.color.calendar_text_black))
-                                tv.background = ContextCompat.getDrawable(this@PostSetUpActivity, R.drawable.bg_default_day)
+                                tv.background = ContextCompat.getDrawable(this@PostSetUpActivity, R.drawable.bg_filled_default)
                             } else {
                                 tv.setTextColor(ContextCompat.getColor(this@PostSetUpActivity, R.color.sub_gray))
                                 tv.background = null
