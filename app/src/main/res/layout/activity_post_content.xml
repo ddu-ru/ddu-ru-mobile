@@ -71,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:hint="내용을 입력하세요.(최대 5000자)"
+                android:hint="내용을 입력하세요.(최대 5000자) \n\nex) \nmbti J이신 분들을 선호해요.\n회는 꼭 먹으러 갈 예정입니다. \n흡연은 안 하셨으면 좋겠어요."
                 android:textColorHint="@color/sub_gray"
                 app:hintEnabled="false"
                 android:maxLength="5000"
