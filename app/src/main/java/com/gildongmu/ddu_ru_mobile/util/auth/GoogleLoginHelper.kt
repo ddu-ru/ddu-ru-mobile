@@ -1,4 +1,4 @@
-package com.gildongmu.ddu_ru_mobile.util.login
+package com.gildongmu.ddu_ru_mobile.util.auth
 
 import android.app.Activity
 import android.content.Intent

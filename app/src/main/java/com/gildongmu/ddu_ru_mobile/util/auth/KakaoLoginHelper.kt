@@ -1,11 +1,11 @@
-package com.gildongmu.ddu_ru_mobile.util.login
+package com.gildongmu.ddu_ru_mobile.util.auth
 
 import android.util.Log
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.user.UserApiClient
 import android.content.Context
-import com.gildongmu.ddu_ru_mobile.model.KakaoLoginRequest
+import com.gildongmu.ddu_ru_mobile.model.auth.request.LoginRequest
 import com.gildongmu.ddu_ru_mobile.network.NetworkModule
 import com.kakao.sdk.common.model.ClientErrorCause
 import kotlinx.coroutines.CoroutineScope
@@ -60,12 +60,12 @@ object KakaoLoginHelper {
 
     // 서버로 카카오 토큰을 보내는 suspend 함수
     private suspend fun sendKakaoTokenToServer(context: Context, idToken: String) {
-        val api = NetworkModule.provideKakaoApi(context.applicationContext)
+        val api = NetworkModule.providSocialLoginApi(context.applicationContext)
 
         try {
             // 서버 요청 후 응답 처리
             val response = withContext(Dispatchers.IO) {
-                api.socialLogin(KakaoLoginRequest(idToken = idToken)) // `idToken`을 서버로 전송
+                api.loginWithKakao(LoginRequest(idToken = idToken)) // `idToken`을 서버로 전송
             }
 
             Log.d(TAG, "서버 응답: $response") // 여기서 응답이 KakaoLoginResponse 형태로 정상 반환되는지 확인

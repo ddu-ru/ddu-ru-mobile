@@ -1,4 +1,4 @@
-package com.gildongmu.ddu_ru_mobile.ui
+package com.gildongmu.ddu_ru_mobile.ui.auth
 
 import TokenDataStore
 import android.os.Bundle
@@ -6,8 +6,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.gildongmu.ddu_ru_mobile.R
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class TokenDebugActivity : AppCompatActivity() {
 

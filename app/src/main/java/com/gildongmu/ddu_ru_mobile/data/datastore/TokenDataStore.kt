@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.first
 val Context.authTokenStore: DataStore<AuthToken> by
 dataStore(
     fileName = "auth_tokens.pb",
-    serializer = TokenPreferencesSerializer // Serializer<AuthToken>
+    serializer = TokenPreferencesSerializer
 )
 
 class TokenDataStore(private val context: Context) {
