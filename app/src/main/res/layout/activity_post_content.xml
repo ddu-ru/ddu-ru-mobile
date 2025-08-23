@@ -30,12 +30,29 @@
             android:stateListAnimator="@null"/>
     </androidx.appcompat.widget.Toolbar>
 
-    <Button
+    <FrameLayout
+        android:id="@+id/imageViewWrapper"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/bg_border_defualt"
-        app:backgroundTint="@null"/>
+        android:layout_marginTop="24dp">
+
+        <ImageView
+            android:id="@+id/imageViewButton"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/bg_border_defualt"
+            app:backgroundTint="@null"/>
+
+        <ImageButton
+            android:id="@+id/deleteButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="top|end"
+            android:background="@drawable/ic_imagedel"
+            app:backgroundTint="@null"
+            android:visibility="gone"/>
+    </FrameLayout>
 
     <EditText
         android:id="@+id/editTextTitle"
@@ -48,55 +65,54 @@
         android:maxLength="100"
         android:padding="10dp"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:layout_marginTop="24dp"
+        android:orientation="vertical"
+        android:background="@drawable/bg_border_selected"
+        android:padding="10dp">
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/contentInputLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="24dp"
+        android:layout_height="wrap_content"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:background="@drawable/bg_border_selected"
         app:hintEnabled="false"
         app:counterEnabled="true"
-        android:padding="10dp"
         app:counterMaxLength="5000">
 
-        <LinearLayout
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextContent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextContent"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:hint="내용을 입력하세요.(최대 5000자) \n\nex) \nmbti J이신 분들을 선호해요.\n회는 꼭 먹으러 갈 예정입니다. \n흡연은 안 하셨으면 좋겠어요."
-                android:textColorHint="@color/sub_gray"
-                app:hintEnabled="false"
-                android:maxLength="5000"
-                app:boxBackgroundMode="none"
-                android:background="@color/white"
-                android:inputType="textMultiLine"
-                android:gravity="top|start"
-                android:minHeight="300dp"/>
-
-            <EditText
-                android:id="@+id/editTextTag"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="태그를 입력해주세요"
-                android:singleLine="true"
-                android:textColorHint="@color/sub_gray"
-                app:hintEnabled="false"
-                app:boxBackgroundMode="none"
-                android:background="@color/white"
-                android:inputType="textMultiLine"
-                android:gravity="top|start"
-                android:layout_marginTop="8dp"/>
-        </LinearLayout>
+            android:layout_height="350dp"
+            android:hint="내용을 입력하세요.(최대 5000자) \n\nex) \nmbti J이신 분들을 선호해요.\n회는 꼭 먹으러 갈 예정입니다. \n흡연은 안 하셨으면 좋겠어요."
+            android:textColorHint="@color/sub_gray"
+            app:hintEnabled="false"
+            android:maxLength="5000"
+            app:boxBackgroundMode="none"
+            android:background="@color/white"
+            android:inputType="textMultiLine"
+            android:gravity="top|start"/>
 
     </com.google.android.material.textfield.TextInputLayout>
+
+        <EditText
+            android:id="@+id/editTextTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="태그를 입력해주세요"
+            android:singleLine="true"
+            android:textColorHint="@color/sub_gray"
+            app:hintEnabled="false"
+            app:boxBackgroundMode="none"
+            android:background="@color/white"
+            android:inputType="textMultiLine"
+            android:gravity="top|start"
+            android:layout_margin="10dp"/>
+
+    </LinearLayout>
+
 
     <Button
         android:id="@+id/btn"
