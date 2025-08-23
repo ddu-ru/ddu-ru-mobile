@@ -1,5 +1,6 @@
 package com.gildongmu.ddu_ru_mobile.ui.post
 
+import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -544,5 +545,10 @@ class PostSetUpActivity : AppCompatActivity() {
 
         // 초기 상태 반영
         updateNextEnabled()
+
+        postSetUpBinding.btnNext.setOnClickListener {
+            val intent = Intent(this, PostContentActivity::class.java) // NextActivity로 이동
+            startActivity(intent)
+        }
     }
 }
