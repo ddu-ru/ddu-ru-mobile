@@ -32,4 +32,14 @@ class TokenDataStore(private val context: Context) {
         val token = context.authTokenStore.data.first()
         return token.accessToken.isNotEmpty() && token.refreshToken.isNotEmpty()
     }
+
+    suspend fun getToken(): String?{
+        val token = context.authTokenStore.data.first()
+        return token.accessToken
+    }
+
+    suspend fun getRefreshToken(): String? {
+        val token = authToken.first()
+        return token.refreshToken
+    }
 }

@@ -3,6 +3,8 @@ package com.gildongmu.ddu_ru_mobile.network
 import android.content.Context
 import com.gildongmu.ddu_ru_mobile.BuildConfig
 import com.gildongmu.ddu_ru_mobile.network.api.auth.AuthService
+import com.gildongmu.ddu_ru_mobile.network.interceptor.AuthInterceptor
+import com.kakao.sdk.network.AppKeyInterceptor
 import retrofit2.Retrofit
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -21,6 +23,14 @@ object NetworkModule {
             .build()
 
         return retrofit.create(AuthService::class.java)
+    }
+
+    private fun provideOkHttpClient(interceptor: AppInterceptor, context: Context): OkHttpClient{
+        return OkHttpClient.Builder().run{
+            addInterceptor (interceptor)
+            addInterceptor (AuthInterceptor(context))
+            build()
+        }
     }
 
 }
