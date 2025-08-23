@@ -50,7 +50,7 @@ class LoginActivity : AppCompatActivity() {
 
                                             // NetworkModule의 provideKakaoApi 사용
                                             val authService =
-                                                    NetworkModule.providSocialLoginApi(
+                                                    NetworkModule.provideSocialLoginApi(
                                                             this@LoginActivity
                                                     )
                                             val response =

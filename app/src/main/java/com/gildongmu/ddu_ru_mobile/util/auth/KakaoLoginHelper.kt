@@ -60,7 +60,7 @@ object KakaoLoginHelper {
 
     // 서버로 카카오 토큰을 보내는 suspend 함수
     private suspend fun sendKakaoTokenToServer(context: Context, idToken: String) {
-        val api = NetworkModule.providSocialLoginApi(context.applicationContext)
+        val api = NetworkModule.provideSocialLoginApi(context.applicationContext)
 
         try {
             // 서버 요청 후 응답 처리

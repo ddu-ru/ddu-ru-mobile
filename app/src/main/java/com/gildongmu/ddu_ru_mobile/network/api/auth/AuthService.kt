@@ -17,7 +17,7 @@ interface AuthService {
 
     @POST("auth/refresh")
     suspend fun refreshAccessToken(
-        @Body refreshToken: String
+        @Header("Authorization") refreshToken: String
     ): LoginResponse
 
 }

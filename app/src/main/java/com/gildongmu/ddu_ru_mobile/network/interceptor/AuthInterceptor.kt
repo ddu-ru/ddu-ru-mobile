@@ -2,16 +2,13 @@ package com.gildongmu.ddu_ru_mobile.network.interceptor
 
 import TokenDataStore
 import android.content.Context
-import com.gildongmu.ddu_ru_mobile.BuildConfig
 import com.gildongmu.ddu_ru_mobile.model.auth.response.LoginResponse
-import com.gildongmu.ddu_ru_mobile.network.api.auth.AuthService
+import com.gildongmu.ddu_ru_mobile.network.NetworkModule
+import kotlin.jvm.Throws
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
 import okio.IOException
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.jvm.Throws
 
 class AuthInterceptor(private val context: Context) : Interceptor {
 
@@ -20,44 +17,63 @@ class AuthInterceptor(private val context: Context) : Interceptor {
         // TokenDataStore 인스턴스 생성
         val tokenDataStore = TokenDataStore(context)
 
-        // runBlocking을 사용하여 비동기적 작업을 동기적으로 실행
-        val token = runBlocking { tokenDataStore.getToken()}
+        // 현재 access token 가져오기 (suspend 함수를 동기적으로 호출)
+        val token = runBlocking { tokenDataStore.getToken() }
 
-        // 새로운 요청을 빌드하여 Authrization 헤더 추가
-        val newRequest = chain.request().newBuilder()
-            .apply {
-                if (token != null) {
-                    addHeader("Authorization", "Bearer $token")
-                }
-            }
-            .build()
+        // 새로운 요청을 빌드하여 Authorization 헤더 추가
+        val newRequest =
+                chain.request()
+                        .newBuilder()
+                        .apply {
+                            if (token != null) {
+                                addHeader("Authorization", "Bearer $token")
+                            }
+                        }
+                        .build()
 
         var response = chain.proceed(newRequest)
 
+        // 401 Unauthorized 에러 발생 시 토큰 갱신 시도
         if (response.code == 401) {
-           val refreshToken =  runBlocking { tokenDataStore.getRefreshToken()}
-          val newToken = refreshToken(refreshToken)
+            val refreshToken = runBlocking { tokenDataStore.getRefreshToken() } ?: ""
 
-            runBlocking {
-                tokenDataStore.saveTokens(newToken.accessToken, newToken.refreshToken)
+            if (refreshToken.isNotEmpty()) {
+                try {
+                    // 토큰 갱신 API 호출
+                    val newToken = refreshTokenSync(refreshToken)
+
+                    // 새로운 토큰 저장 (suspend 함수를 동기적으로 호출)
+                    runBlocking {
+                        tokenDataStore.saveTokens(newToken.accessToken, newToken.refreshToken)
+                    }
+
+                    // 갱신된 토큰으로 요청 재시도
+                    val retryRequest =
+                            chain.request()
+                                    .newBuilder()
+                                    .addHeader("Authorization", "Bearer ${newToken.accessToken}")
+                                    .build()
+                    response = chain.proceed(retryRequest)
+                } catch (e: Exception) {
+                    // 토큰 갱신 실패 시 기존 응답 반환
+                    // TODO: 로그인 화면으로 리다이렉트 처리
+                }
             }
-
-            val retryRequest = chain.request().newBuilder()
-                .addHeader("Authorization", "Bearer ${newToken.accessToken}")
-                .build()
-            response = chain.proceed(retryRequest)
         }
-        return  response
-        // 새로운 요청(수정된 요청)으로 API 호출 진행
 
+        return response
     }
-    private  fun refreshToken(refreshToken: String): LoginResponse {
-        val authService = Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(AuthService::class.java)
-// refreshToken 이 두개가 아니라 accessToken을 해야하는데 ,, 코드 이해좀 하고 하자
-        return authService.refreshAccessToken(refreshToken)
+
+    /** 동기적으로 토큰을 갱신하는 함수 주의: 메인 스레드에서 호출하면 안됨 */
+    private fun refreshTokenSync(refreshToken: String): LoginResponse {
+        // NetworkModule을 사용하여 AuthService 생성
+        val authService = NetworkModule.provideSocialLoginApi(context)
+
+        return try {
+            // 동기적으로 토큰 갱신 (runBlocking 사용)
+            runBlocking { authService.refreshAccessToken(refreshToken) }
+        } catch (e: Exception) {
+            throw RuntimeException("토큰 갱신 실패", e)
+        }
     }
 }
