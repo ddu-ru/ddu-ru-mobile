@@ -20,4 +20,9 @@ interface AuthService {
         @Header("Authorization") refreshToken: String
     ): LoginResponse
 
+    @POST("auth/logout")
+    suspend fun logout(
+        @Header("Authorization") accessToken:String
+    )
+
 }
