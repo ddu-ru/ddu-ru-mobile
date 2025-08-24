@@ -1,6 +1,7 @@
 package com.gildongmu.ddu_ru_mobile.util.auth
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
@@ -11,75 +12,54 @@ import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.api.ApiException
 
-object GoogleLoginHelper {
+object GoogleLoginHelper : SocialLoginHelper("GoogleLogin") {
+
     private lateinit var oneTapClient: SignInClient
     private lateinit var signInRequest: BeginSignInRequest
 
     fun initGoogleLogin(activity: Activity, launcher: ActivityResultLauncher<IntentSenderRequest>) {
-        try {
-            oneTapClient = Identity.getSignInClient(activity)
-            val webClientId = BuildConfig.GOOGLE_WEB_CLIENT_ID
+        oneTapClient = Identity.getSignInClient(activity)
+        val webClientId = BuildConfig.GOOGLE_WEB_CLIENT_ID
 
-            signInRequest =
-                BeginSignInRequest.builder()
-                    .setGoogleIdTokenRequestOptions(
-                        BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                            .setSupported(true)
-                            .setServerClientId(webClientId)
-                            .setFilterByAuthorizedAccounts(false)
-                            .build()
-                    )
-                    .setAutoSelectEnabled(false)
-                    .build()
+        signInRequest =
+            BeginSignInRequest.builder()
+                .setGoogleIdTokenRequestOptions(
+                    BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                        .setSupported(true)
+                        .setServerClientId(webClientId)
+                        .setFilterByAuthorizedAccounts(false)
+                        .build()
+                )
+                .setAutoSelectEnabled(false)
+                .build()
 
-            oneTapClient
-                .beginSignIn(signInRequest)
-                .addOnSuccessListener { result ->
-                    val request =
-                        IntentSenderRequest.Builder(result.pendingIntent.intentSender)
-                            .build()
-                    launcher.launch(request)
-                }
-                .addOnFailureListener { e ->
-                    if (BuildConfig.DEBUG) {
-                        Log.e("GoogleLogin", "로그인 UI 표시 실패 : $e")
-                    }
-                }
-        } catch (e: Exception) {
-            if (BuildConfig.DEBUG) {
-                Log.e("GoogleLogin", "Google 로그인 초기화 실패: ${e.message}")
+        oneTapClient.beginSignIn(signInRequest)
+            .addOnSuccessListener { result ->
+                launcher.launch(IntentSenderRequest.Builder(result.pendingIntent.intentSender).build())
             }
-        }
+            .addOnFailureListener { e ->
+                Log.e(tag, "로그인 UI 표시 실패", e)
+            }
     }
 
-    fun handleResult(data: Intent?, onSuccess: (String) -> Unit, onFailure: () -> Unit) {
+    fun handleResult(context: Activity, data: Intent?, callback: SocialLoginCallback) {
         try {
-            if(data == null ){
-                if(BuildConfig.DEBUG) Log.e("GoogleLogin", "Intent data가 null입니다. ")
-                onFailure()
-                return
+            val credential = oneTapClient.getSignInCredentialFromIntent(data)
+            val idToken = credential.googleIdToken
+            if (idToken != null) {
+                sendTokenToServer(context, idToken, SocialType.GOOGLE, callback)
+            } else {
+                callback.onFailure("ID Token이 null입니다.")
             }
-            try {
-                val credential = oneTapClient.getSignInCredentialFromIntent(data)
-                val idToken = credential.googleIdToken
-
-                if(idToken!=null){
-                    if(BuildConfig.DEBUG){
-                        Log.d("GoogleLogin","IDToken 받음 : $idToken")
-                    }
-                    onSuccess(idToken)
-                }
-            } catch (e: ApiException) {
-                if (BuildConfig.DEBUG) {
-                    Log.e("GoogleLogin", "Google Sign-In 결과 파싱 실패 - ApiException: ${e.statusCode}")
-                }
-                onFailure()
-            }
-        } catch (e: Exception) {
-            if (BuildConfig.DEBUG) {
-                Log.e("GoogleLogin", "Sign-in 처리 중 예외 발생: ${e.message}")
-            }
-            onFailure()
+        } catch (e: ApiException) {
+            Log.e(tag, "Google Sign-In 결과 파싱 실패", e)
+            callback.onFailure(e.statusMessage)
+        }
+    }
+    override fun login(context: Context, callback: SocialLoginCallback) {
+        if(BuildConfig.DEBUG){
+            Log.w(tag, "login() 호출됨 ")
+            callback.onFailure("Google 로그인은 initGoogleLogin()으로 시작해야 해서 실패.")
         }
     }
 }

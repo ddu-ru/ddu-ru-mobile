@@ -32,4 +32,20 @@ object NetworkModule {
             build()
         }
     }
+    fun provideAuthApi(context: Context): AuthService {
+        val baseUrl = BuildConfig.BASE_URL
+        val clientWithAuth = OkHttpClient.Builder()
+            .addInterceptor(logging)
+            .addInterceptor(AuthInterceptor(context)) // 토큰 넣어주는 Interceptor
+            .build()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .client(clientWithAuth)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        return retrofit.create(AuthService::class.java)
+    }
+
 }
