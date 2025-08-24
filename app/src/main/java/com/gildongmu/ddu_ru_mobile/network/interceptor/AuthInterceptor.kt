@@ -72,8 +72,8 @@ class AuthInterceptor(private val context: Context) : Interceptor {
                                 refreshToken
                         )
                 authService.refreshAccessToken(
-                        accessToken = "Bearer $refreshToken", // 헤더로도 보냄
-                        request = request // 바디로도 보냄
+                        accessToken = "Bearer $refreshToken",
+                        request = request
                 )
             }
         } catch (e: Exception) {
