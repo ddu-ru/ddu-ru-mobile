@@ -13,22 +13,18 @@ import okhttp3.Response
 import okio.IOException
 
 class AuthInterceptor(private val context: Context) : Interceptor {
-
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
-
         val tokenDataStore = TokenDataStore(context)
         val token = runBlocking { tokenDataStore.getAccessToken() }
 
-        val newRequest =
-                chain.request()
-                        .newBuilder()
-                        .apply {
-                            if (token != null) {
-                                addHeader("Authorization", "Bearer $token")
-                            }
-                        }
-                        .build()
+        val newRequest = chain.request().newBuilder()
+            .apply {
+                if (token != null) {
+                    addHeader("Authorization", "Bearer $token")
+                }
+            }
+            .build()
 
         var response = chain.proceed(newRequest)
 
@@ -37,7 +33,6 @@ class AuthInterceptor(private val context: Context) : Interceptor {
 
             if (refreshToken.isNotEmpty()) {
                 try {
-
                     val newToken = refreshTokenSync(refreshToken)
 
                     runBlocking {
@@ -45,36 +40,32 @@ class AuthInterceptor(private val context: Context) : Interceptor {
                     }
 
                     val retryRequest =
-                            chain.request()
-                                    .newBuilder()
-                                    .addHeader("Authorization", "Bearer ${newToken.accessToken}")
-                                    .build()
+                        chain.request()
+                            .newBuilder()
+                            .addHeader("Authorization", "Bearer ${newToken.accessToken}")
+                            .build()
                     response = chain.proceed(retryRequest)
                 } catch (e: Exception) {
                     if (BuildConfig.DEBUG) {
-                        Log.d("$e", "토큰 갱신을 실패했습니다 $e")
+                        Log.e("AuthInterceptor", "토큰 갱신을 실패했습니다", e)
                     }
-
-                    // TODO: 나중에 로그인 화면으로 리다이렉트 처리
+                    // TODO: 나중에 로그인 화면으로 리다이렉트 처리하기
                 }
             }
         }
-
         return response
     }
+
     private fun refreshTokenSync(refreshToken: String): LoginResponse {
         val authService = NetworkModule.provideSocialLoginApi(context)
 
         return try {
             runBlocking {
                 val request =
-                        com.gildongmu.ddu_ru_mobile.model.auth.request.RefreshTokenRequest(
-                                refreshToken
-                        )
-                authService.refreshAccessToken(
-                        accessToken = "Bearer $refreshToken",
-                        request = request
-                )
+                    com.gildongmu.ddu_ru_mobile.model.auth.request.RefreshTokenRequest(
+                        refreshToken
+                    )
+                authService.refreshAccessToken(request = request)
             }
         } catch (e: Exception) {
             throw RuntimeException("토큰 갱신 실패", e)

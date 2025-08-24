@@ -14,11 +14,8 @@ interface AuthService {
     @POST("auth/kakao") suspend fun loginWithKakao(@Body user: LoginRequest): LoginResponse
 
     @POST("auth/logout")
-    suspend fun logout(@Header("Authorization") accessToken: String): Response<Unit>
+    suspend fun logout(): Response<Unit>
 
     @POST("auth/refresh")
-    suspend fun refreshAccessToken(
-            @Header("Authorization") accessToken: String,
-            @Body request: RefreshTokenRequest
-    ): LoginResponse
+    suspend fun refreshAccessToken(@Body request: RefreshTokenRequest): LoginResponse
 }

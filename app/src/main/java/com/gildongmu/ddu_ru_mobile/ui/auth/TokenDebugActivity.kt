@@ -44,18 +44,18 @@ class TokenDebugActivity : AppCompatActivity() {
                         tvAccess.text = refreshedToken.accessToken
                         tvRefresh.text = refreshedToken.refreshToken
                         Toast.makeText(this@TokenDebugActivity, "토큰 갱신 성공", Toast.LENGTH_SHORT)
-                                .show()
+                            .show()
                     } else {
                         Toast.makeText(this@TokenDebugActivity, "토큰 갱신 실패", Toast.LENGTH_SHORT)
-                                .show()
+                            .show()
                     }
                 } catch (e: Exception) {
                     Toast.makeText(
-                                    this@TokenDebugActivity,
-                                    "갱신 실패: ${e.message}",
-                                    Toast.LENGTH_SHORT
-                            )
-                            .show()
+                        this@TokenDebugActivity,
+                        "갱신 실패: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
                 }
             }
         }
@@ -67,28 +67,26 @@ class TokenDebugActivity : AppCompatActivity() {
                     val success = tokenManager.logout()
                     if (success) {
 
-                        startActivity(
-                            Intent(
-                                this@TokenDebugActivity,
-                                LoginActivity::class.java
-                            )
-                        )
-                        tvAccess.text = ""
-                        tvRefresh.text = ""
                         Toast.makeText(this@TokenDebugActivity, "로그아웃 성공", Toast.LENGTH_SHORT)
-                                .show()
+                            .show()
+
+                        val intent = Intent(this@TokenDebugActivity, LoginActivity::class.java)
+                        intent.flags =
+                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+
+                        finish()
                     } else {
                         Toast.makeText(this@TokenDebugActivity, "로그아웃 실패", Toast.LENGTH_SHORT)
-                                .show()
+                            .show()
                     }
                 } catch (e: Exception) {
                     Log.d("=========== Logout", "${e.message}")
                     Toast.makeText(
-                                    this@TokenDebugActivity,
-                                    "로그아웃 실패: ${e.message}",
-                                    Toast.LENGTH_SHORT
-                            )
-                            .show()
+                        this@TokenDebugActivity,
+                        "로그아웃 실패: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }

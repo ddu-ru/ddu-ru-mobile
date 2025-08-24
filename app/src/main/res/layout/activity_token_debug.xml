@@ -67,6 +67,5 @@
             android:layout_height="wrap_content"
             android:text="로그아웃 요청" />
 
-
     </LinearLayout>
 </ScrollView>

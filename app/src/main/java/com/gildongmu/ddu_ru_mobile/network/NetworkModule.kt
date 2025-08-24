@@ -19,24 +19,17 @@ object NetworkModule {
                 Retrofit.Builder()
                         .baseUrl(baseUrl)
                         .client(client)
-                        .addConverterFactory(GsonConverterFactory.create()) // ← Moshi 대신 Gson
+                        .addConverterFactory(GsonConverterFactory.create())
                         .build()
 
         return retrofit.create(AuthService::class.java)
     }
 
-    private fun provideOkHttpClient(interceptor: AuthInterceptor, context: Context): OkHttpClient {
-        return OkHttpClient.Builder().run {
-            addInterceptor(interceptor)
-            addInterceptor(AuthInterceptor(context))
-            build()
-        }
-    }
     fun provideAuthApi(context: Context): AuthService {
         val baseUrl = BuildConfig.BASE_URL
         val clientWithAuth = OkHttpClient.Builder()
             .addInterceptor(logging)
-            .addInterceptor(AuthInterceptor(context)) // 토큰 넣어주는 Interceptor
+            .addInterceptor(AuthInterceptor(context))
             .build()
 
         val retrofit = Retrofit.Builder()
