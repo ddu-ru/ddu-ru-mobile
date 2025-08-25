@@ -14,4 +14,4 @@
 .externalNativeBuild
 .cxx
 local.properties
-/src/main/java/com/gildongmu/ddu_ru_mobile/DevEntryActivity.kt
+/app/src/main/java/com/gildongmu/ddu_ru_mobile/DevEntryActivity.kt
