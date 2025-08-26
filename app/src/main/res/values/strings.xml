@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Ddu-ru-mobile</string>
+    <string name="unauthorization_code">401</string>
 </resources>

@@ -7,10 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 
 val Context.authTokenStore: DataStore<AuthToken> by
-dataStore(
-    fileName = "auth_tokens.pb",
-    serializer = TokenPreferencesSerializer // Serializer<AuthToken>
-)
+        dataStore(fileName = "auth_tokens.pb", serializer = TokenPreferencesSerializer)
 
 class TokenDataStore(private val context: Context) {
 
@@ -31,5 +28,15 @@ class TokenDataStore(private val context: Context) {
     suspend fun hasValidTokens(): Boolean {
         val token = context.authTokenStore.data.first()
         return token.accessToken.isNotEmpty() && token.refreshToken.isNotEmpty()
+    }
+
+    suspend fun getAccessToken(): String? {
+        val token = context.authTokenStore.data.first()
+        return token.accessToken
+    }
+
+    suspend fun getRefreshToken(): String? {
+        val token = authToken.first()
+        return token.refreshToken
     }
 }

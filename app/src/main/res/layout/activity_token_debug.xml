@@ -50,6 +50,22 @@
             android:maxLines="6"
             android:ellipsize="end"
             android:text="(empty)" />
+        <!-- 위 TextView 들 아래쪽에 추가 -->
+        <Button
+            android:id="@+id/btn_refresh_token"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Access Token 갱신" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp" />
+
+        <Button
+            android:id="@+id/btn_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="로그아웃 요청" />
 
     </LinearLayout>
 </ScrollView>
