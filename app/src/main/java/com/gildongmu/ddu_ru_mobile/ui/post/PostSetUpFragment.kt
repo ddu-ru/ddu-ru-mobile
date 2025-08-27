@@ -555,7 +555,7 @@ class PostSetUpFragment : Fragment() {
         updateNextEnabled()
 
         binding.btnNext.setOnClickListener {
-            findNavController().navigate(R.id.postContentFragment)
+            findNavController().navigate(R.id.action_postSetUp_to_postContent)
         }
     }
 
