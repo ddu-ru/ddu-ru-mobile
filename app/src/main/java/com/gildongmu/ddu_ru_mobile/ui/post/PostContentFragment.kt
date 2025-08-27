@@ -245,4 +245,9 @@ class PostContentFragment : Fragment() {
             binding.btn.setBackgroundResource(R.drawable.bg_border_defualt)
         }
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }
