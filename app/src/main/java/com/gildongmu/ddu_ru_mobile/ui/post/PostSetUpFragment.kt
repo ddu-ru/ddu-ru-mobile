@@ -423,14 +423,24 @@ class PostSetUpFragment : Fragment() {
         binding.spinnerRecruit.setSelection(binding.spinnerRecruit.adapter.count)
         binding.spinnerRecruit.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                    val tv = view.findViewById<TextView>(R.id.spinnerText)
-                    if (position == 8) {
-                        binding.spinnerRecruit.setBackgroundResource(R.drawable.bg_border_defualt)
+                override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                    if (view != null) {
+                        val tv = view.findViewById<TextView>(R.id.spinnerText)
+                        if (position == 8) {
+                            binding.spinnerRecruit.setBackgroundResource(R.drawable.bg_border_defualt)
+                        } else {
+                            tv?.setTextColor(ContextCompat.getColor(requireContext(), R.color.main_color))
+                            binding.spinnerRecruit.setBackgroundResource(R.drawable.bg_border_selected)
+                            (binding.spinnerRecruit.adapter as? BoardSpinnerAdapter)?.setSelectedPosition(position)
+                        }
                     } else {
-                        tv?.setTextColor(ContextCompat.getColor(requireContext(), R.color.main_color))
-                        binding.spinnerRecruit.setBackgroundResource(R.drawable.bg_border_selected)
-                        (binding.spinnerRecruit.adapter as? BoardSpinnerAdapter)?.setSelectedPosition(position)
+                        // view가 null인 경우에도 배경 설정
+                        if (position == 8) {
+                            binding.spinnerRecruit.setBackgroundResource(R.drawable.bg_border_defualt)
+                        } else {
+                            binding.spinnerRecruit.setBackgroundResource(R.drawable.bg_border_selected)
+                            (binding.spinnerRecruit.adapter as? BoardSpinnerAdapter)?.setSelectedPosition(position)
+                        }
                     }
                     updateNextEnabled()
                 }
