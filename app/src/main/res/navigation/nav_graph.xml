@@ -7,9 +7,19 @@
     <fragment
         android:id="@+id/postSetUpFragment"
         android:name="com.gildongmu.ddu_ru_mobile.ui.post.PostSetUpFragment"
-        android:label="PostSetUpFragment" />
+        android:label="PostSetUpFragment">
+        
+        <action
+            android:id="@+id/action_postSetUp_to_postContent"
+            app:destination="@id/postContentFragment"
+            app:popUpTo="@id/postSetUpFragment"
+            app:popUpToInclusive="true" />
+            
+    </fragment>
+    
     <fragment
         android:id="@+id/postContentFragment"
         android:name="com.gildongmu.ddu_ru_mobile.ui.post.PostContentFragment"
         android:label="PostContentFragment" />
+        
 </navigation>
