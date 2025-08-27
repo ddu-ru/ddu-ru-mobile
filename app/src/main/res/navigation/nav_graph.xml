@@ -13,7 +13,7 @@
             android:id="@+id/action_postSetUp_to_postContent"
             app:destination="@id/postContentFragment"
             app:popUpTo="@id/postSetUpFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="false" />
             
     </fragment>
     
