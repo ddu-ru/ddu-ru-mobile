@@ -35,6 +35,7 @@ import java.util.Locale
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.slider.RangeSlider
 import java.text.NumberFormat
 
@@ -554,8 +555,7 @@ class PostSetUpFragment : Fragment() {
         updateNextEnabled()
 
         binding.btnNext.setOnClickListener {
-            // Fragment 전환을 위해 Activity의 replaceFragment 메서드 호출
-            (activity as? PostActivity)?.replaceFragment(PostContentFragment())
+            findNavController().navigate(R.id.postContentFragment)
         }
     }
 
