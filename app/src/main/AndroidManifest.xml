@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
 
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -24,10 +23,9 @@
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Ddurumobile">
-        </activity>
-
-        <activity android:name=".DevEntryActivity"
+            android:theme="@style/Theme.Ddurumobile"></activity>
+        <activity
+            android:name=".DevEntryActivity"
             android:exported="true"
             android:theme="@style/Theme.Ddurumobile">
             <intent-filter>
@@ -36,10 +34,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".ui.post.PostSetUpActivity"/>
-        <activity android:name=".ui.post.PostContentActivity"/>
-
+        <activity
+            android:name=".ui.post.PostActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
