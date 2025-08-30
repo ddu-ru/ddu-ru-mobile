@@ -9,6 +9,5 @@ import retrofit2.http.Header
 interface PostCreateService {
     @POST("posts")
     suspend fun postCreate(
-        @Header("Authorization") authorization: String,
         @Body post: PostCreateRequest): PostCreateResponse
 }
