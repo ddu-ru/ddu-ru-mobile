@@ -6,13 +6,13 @@ data class PostCreateRequest (
     val content: String,
     val startDate: String,
     val endDate: String,
-    val recruitCapacity: Integer,
+    val recruitCapacity: Int,
     val recruitDeadline: String,
     val preferredGender: String,
     val preferredAgeMin: String,
     val preferredAgeMax: String,
-    val budgetMin: Integer,
-    val budgetMax: Integer,
+    val budgetMin: Int,
+    val budgetMax: Int,
     val photoUrls: Array<String>,
     val tags: Array<String>
 )
