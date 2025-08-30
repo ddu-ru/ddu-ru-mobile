@@ -43,7 +43,8 @@ class PostActivity : AppCompatActivity() {
 
         // 뒤로가기 버튼 클릭 시 finish()
         postBinding.toolbar.setNavigationOnClickListener {
-            onBackPressed()
+            val dispatcher = onBackPressedDispatcher
+            dispatcher.onBackPressed()
         }
     }
 }
