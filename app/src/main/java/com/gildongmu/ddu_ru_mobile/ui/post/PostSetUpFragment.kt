@@ -19,8 +19,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import com.gildongmu.ddu_ru_mobile.R
-import com.gildongmu.ddu_ru_mobile.databinding.ActivityPostSetupBinding
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.CalendarMonth
 import com.kizitonwose.calendar.core.DayPosition
@@ -34,15 +35,20 @@ import java.time.format.TextStyle
 import java.util.Locale
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.EditText
 import androidx.navigation.fragment.findNavController
+import com.gildongmu.ddu_ru_mobile.databinding.FragmentPostSetupBinding
 import com.google.android.material.slider.RangeSlider
 import java.text.NumberFormat
 
 class PostSetUpFragment : Fragment() {
 
-    private var _binding: ActivityPostSetupBinding? = null
+    private var _binding: FragmentPostSetupBinding? = null
     private val binding get() = _binding!!
+
+    // ViewModel 추가
+    private val viewModel: PostViewModel by activityViewModels()
 
     private val startMonth = YearMonth.now().minusMonths(100)
     private val endMonth = YearMonth.now().plusMonths(100)
@@ -55,8 +61,81 @@ class PostSetUpFragment : Fragment() {
     private var selectedEndDate: LocalDate? = null
     private val today: LocalDate = LocalDate.now()
 
-    enum class Gender { MALE, FEMALE, ANY }
+    enum class Gender { M, F, A }
     private var selectedGender: Gender? = null
+
+    // ---------- Observer 설정 ----------
+    private fun setupObservers() {
+        // ViewModel의 LiveData를 observe
+        viewModel.startDate.observe(viewLifecycleOwner, Observer { startDate ->
+            // 시작일이 변경되었을 때의 처리
+            if (startDate != "출발일" && startDate.isNotEmpty()) {
+                binding.btnDepartureDate.text = startDate
+                binding.btnDepartureDate.asSelected()
+            }
+        })
+        
+        viewModel.endDate.observe(viewLifecycleOwner, Observer { endDate ->
+            // 종료일이 변경되었을 때의 처리
+            if (endDate != "도착일" && endDate.isNotEmpty()) {
+                binding.btnArrivalDate.text = endDate
+                binding.btnArrivalDate.asSelected()
+            }
+        })
+        
+        viewModel.recruitDeadline.observe(viewLifecycleOwner, Observer { deadline ->
+            // 모집마감일이 변경되었을 때의 처리
+            if (deadline != "모집마감일" && deadline.isNotEmpty()) {
+                binding.btnRecruitDeadline.text = deadline
+                binding.btnRecruitDeadline.asSelected()
+            }
+        })
+        
+        viewModel.preferredGender.observe(viewLifecycleOwner, Observer { gender ->
+            // 선호 성별이 변경되었을 때의 처리
+            when (gender) {
+                "M" -> {
+                    selectedGender = Gender.M
+                    binding.btnMale.asSelected()
+                    binding.btnFemale.asDefault()
+                    binding.btnGenderAny.asDefault()
+                }
+                "F" -> {
+                    selectedGender = Gender.F
+                    binding.btnMale.asDefault()
+                    binding.btnFemale.asSelected()
+                    binding.btnGenderAny.asDefault()
+                }
+                "A" -> {
+                    selectedGender = Gender.A
+                    binding.btnMale.asDefault()
+                    binding.btnFemale.asDefault()
+                    binding.btnGenderAny.asSelected()
+                }
+                else -> {
+                    selectedGender = null
+                    binding.btnMale.asDefault()
+                    binding.btnFemale.asDefault()
+                    binding.btnGenderAny.asDefault()
+                }
+            }
+        })
+        
+        viewModel.recruitCapacity.observe(viewLifecycleOwner, Observer { capacity ->
+            // 모집 인원이 변경되었을 때의 처리
+            if (capacity > 0) {
+                binding.spinnerRecruit.setSelection(capacity - 1)
+            }
+        })
+        
+        viewModel.budgetMin.observe(viewLifecycleOwner, Observer { minBudget ->
+            // 최소 예산이 변경되었을 때의 처리
+        })
+        
+        viewModel.budgetMax.observe(viewLifecycleOwner, Observer { maxBudget ->
+            // 최대 예산이 변경되었을 때의 처리
+        })
+    }
 
     // ---------- ViewContainers ----------
     inner class DayViewContainer(view: View) : ViewContainer(view) {
@@ -166,10 +245,19 @@ class PostSetUpFragment : Fragment() {
     private fun applyGenderSelection(newGender: Gender) {
         selectedGender = if (selectedGender == newGender) null else newGender
         with(binding) {
-            btnMale.ifSelectedThen(newGender == Gender.MALE && selectedGender == Gender.MALE)
-            btnFemale.ifSelectedThen(newGender == Gender.FEMALE && selectedGender == Gender.FEMALE)
-            btnGenderAny.ifSelectedThen(newGender == Gender.ANY && selectedGender == Gender.ANY)
+            btnMale.ifSelectedThen(newGender == Gender.M && selectedGender == Gender.M)
+            btnFemale.ifSelectedThen(newGender == Gender.F && selectedGender == Gender.F)
+            btnGenderAny.ifSelectedThen(newGender == Gender.A && selectedGender == Gender.A)
         }
+        
+        // ViewModel에 성별 정보 저장
+        val genderText = when (selectedGender) {
+            Gender.M -> "M"
+            Gender.F -> "F"
+            Gender.A -> "A"
+            null -> ""
+        }
+        viewModel.setPreferredGender(genderText)
         updateNextEnabled()
     }
 
@@ -199,13 +287,16 @@ class PostSetUpFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = ActivityPostSetupBinding.inflate(inflater, container, false)
+        _binding = FragmentPostSetupBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     // ---------- onViewCreated ----------
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Observer 설정
+        setupObservers()
 
         // SearchView
         val searchIcon = binding.searchView.findViewById<ImageView>(androidx.appcompat.R.id.search_mag_icon)
@@ -312,16 +403,23 @@ class PostSetUpFragment : Fragment() {
                     // 클릭 로직
                     container.view.setOnClickListener {
                         val clicked = day.date
+                        val fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
                         // 둘 다 선택된 상태에서 아무 날짜 탭 → 출발일부터 다시 선택
                         if (selectedStartDate != null && selectedEndDate != null && editTarget != EditTarget.END) {
                             selectedStartDate = clicked
                             selectedEndDate = null
-                            val fmt = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+                            
+                            val fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                             binding.btnDepartureDate.text = selectedStartDate?.format(fmt) ?: "출발일 선택"
                             binding.btnDepartureDate.asSelected()
                             binding.btnArrivalDate.text = "도착일 선택"
                             binding.btnArrivalDate.asDefault()
+                            
+                            // ViewModel 업데이트
+                            viewModel.setStartDate(selectedStartDate?.format(fmt)?:"")
+                            viewModel.setEndDate("도착일")
+                            
                             binding.calendarView.notifyCalendarChanged()
                             updateNextEnabled()
                             return@setOnClickListener
@@ -334,6 +432,23 @@ class PostSetUpFragment : Fragment() {
                                     selectedEndDate = null
                                 }
                                 editTarget = EditTarget.NONE
+                                
+                                // 버튼 텍스트 업데이트
+                                binding.btnDepartureDate.text = selectedStartDate?.format(fmt)
+                                binding.btnDepartureDate.asSelected()
+                                if (selectedEndDate == null) {
+                                    binding.btnArrivalDate.text = "도착일 선택"
+                                    binding.btnArrivalDate.asDefault()
+                                }
+                                
+                                // ViewModel 업데이트
+                                viewModel.setStartDate(selectedStartDate?.format(fmt) ?: "")
+                                if (selectedEndDate == null) {
+                                    viewModel.setEndDate("도착일")
+                                }
+                                
+                                binding.calendarView.notifyCalendarChanged()
+                                updateNextEnabled()
                             }
 
                             EditTarget.END -> {
@@ -344,7 +459,7 @@ class PostSetUpFragment : Fragment() {
                                 if (clicked < selectedStartDate) {
                                     selectedStartDate = clicked
 
-                                    val fmt = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+                                    val fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                                     binding.btnDepartureDate.text = selectedStartDate?.format(fmt)
                                     binding.btnDepartureDate.asSelected()
                                     if (selectedEndDate != null) {
@@ -366,6 +481,13 @@ class PostSetUpFragment : Fragment() {
                                 }
                                 selectedEndDate = clicked
                                 editTarget = EditTarget.NONE
+                                
+                                // 버튼 텍스트 업데이트
+                                binding.btnArrivalDate.text = selectedEndDate?.format(fmt)
+                                binding.btnArrivalDate.asSelected()
+                                
+                                // ViewModel 업데이트
+                                viewModel.setEndDate(selectedEndDate?.format(fmt)?:"")
                             }
 
                             EditTarget.NONE -> {
@@ -385,26 +507,31 @@ class PostSetUpFragment : Fragment() {
                                         selectedEndDate = clicked
                                     }
                                 }
+                                
+                                // 버튼 텍스트 업데이트
+                                if (selectedStartDate != null) {
+                                    binding.btnDepartureDate.text = selectedStartDate?.format(fmt)
+                                    binding.btnDepartureDate.asSelected()
+                                }
+                                if (selectedEndDate != null) {
+                                    binding.btnArrivalDate.text = selectedEndDate?.format(fmt)
+                                    binding.btnArrivalDate.asSelected()
+                                }
+                                
+                                // ViewModel 업데이트
+                                if (selectedStartDate != null) {
+                                    viewModel.setStartDate(selectedStartDate?.format(fmt)?:"")
+                                }
+                                if (selectedEndDate != null) {
+                                    viewModel.setEndDate(selectedEndDate?.format(fmt)?:"")
+                                }
+                                
+                                binding.calendarView.notifyCalendarChanged()
+                                updateNextEnabled()
                             }
                         }
 
-                        // 버튼 텍스트/스타일 갱신
-                        val fmt = DateTimeFormatter.ofPattern("yyyy.MM.dd")
-                        if (selectedStartDate != null) {
-                            binding.btnDepartureDate.text = selectedStartDate?.format(fmt)
-                            binding.btnDepartureDate.asSelected()
-                        } else {
-                            binding.btnDepartureDate.text = "출발일 선택"
-                            binding.btnDepartureDate.asDefault()
-                        }
-                        if (selectedEndDate != null) {
-                            binding.btnArrivalDate.text = selectedEndDate?.format(fmt)
-                            binding.btnArrivalDate.asSelected()
-                        } else {
-                            binding.btnArrivalDate.text = "도착일 선택"
-                            binding.btnArrivalDate.asDefault()
-                        }
-
+                        // 버튼 텍스트/스타일 갱신 (중복 제거)
                         binding.calendarView.notifyCalendarChanged()
                         updateNextEnabled()
                     }
@@ -442,6 +569,14 @@ class PostSetUpFragment : Fragment() {
                             (binding.spinnerRecruit.adapter as? BoardSpinnerAdapter)?.setSelectedPosition(position)
                         }
                     }
+                    
+                    // ViewModel에 모집 인원 저장 (힌트 제외)
+                    if (position != 8) {
+                        viewModel.setRecruitCapacity(position + 1)
+                    } else {
+                        viewModel.setRecruitCapacity(0)
+                    }
+                    
                     updateNextEnabled()
                 }
                 override fun onNothingSelected(parent: AdapterView<*>) {
@@ -455,9 +590,11 @@ class PostSetUpFragment : Fragment() {
             modal.setStyle(DialogFragment.STYLE_NORMAL, R.style.RoundCornerBottomSheetDialogTheme)
             modal.apply {
                 onDatePicked = { date ->
-                    val pretty = date.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+                    val pretty = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                     binding.btnRecruitDeadline.text = pretty
                     binding.btnRecruitDeadline.asSelected()
+                    // ViewModel에 모집 마감일 저장
+                    viewModel.setRecruitDeadline(pretty)
                     updateNextEnabled()
                 }
             }.show(childFragmentManager, ModalBottomSheet.TAG)
@@ -465,12 +602,53 @@ class PostSetUpFragment : Fragment() {
         binding.btnRecruitDeadline.setOnClickListener { modalWithRoundCorner() }
 
         // ---------- 성별 선택 ----------
-        binding.btnMale.setOnClickListener { applyGenderSelection(Gender.MALE) }
-        binding.btnFemale.setOnClickListener { applyGenderSelection(Gender.FEMALE) }
-        binding.btnGenderAny.setOnClickListener { applyGenderSelection(Gender.ANY) }
+        binding.btnMale.setOnClickListener { applyGenderSelection(Gender.M) }
+        binding.btnFemale.setOnClickListener { applyGenderSelection(Gender.F) }
+        binding.btnGenderAny.setOnClickListener { applyGenderSelection(Gender.A) }
 
         // ---------- 나이 rangeSlider ----------
         binding.ageSlider.setCustomThumbDrawable(R.drawable.ic_custom_thumb)
+
+        // 연령대 슬라이더 값 범위 설정 (10세 ~ 70세, 5세 간격)
+        binding.ageSlider.valueFrom = 10f
+        binding.ageSlider.valueTo = 60f
+        binding.ageSlider.stepSize = 10f
+        binding.ageSlider.setValues(10f, 60f) // 기본값: 양 끝 (10세~70세)
+
+        // 연령대 슬라이더 변경 리스너
+        binding.ageSlider.addOnChangeListener { slider, _, _ ->
+            val minAge = slider.values[0].toInt()
+            val maxAge = slider.values[1].toInt()
+            
+            // 디버깅 로그 추가
+            Log.d("AgeSlider", "슬라이더 값 변경: minAge=$minAge, maxAge=$maxAge")
+            
+            // 연령대를 AGE_10s 형식으로 변환
+            val minAgeRange = when {
+                minAge < 20 -> "AGE_10s"
+                minAge < 30 -> "AGE_20s"
+                minAge < 40 -> "AGE_30s"
+                minAge < 50 -> "AGE_40s"
+                minAge < 60 -> "AGE_50s"
+                else -> "AGE_60s"
+            }
+            
+            val maxAgeRange = when {
+                maxAge < 20 -> "AGE_10s"
+                maxAge < 30 -> "AGE_20s"
+                maxAge < 40 -> "AGE_30s"
+                maxAge < 50 -> "AGE_40s"
+                maxAge < 60 -> "AGE_50s"
+                else -> "AGE_60s"
+            }
+            
+            // 디버깅 로그 추가
+            Log.d("AgeSlider", "변환된 연령대: minAgeRange=$minAgeRange, maxAgeRange=$maxAgeRange")
+            
+            // ViewModel에 연령대 저장
+            viewModel.setPreferredAgeMin(minAgeRange)
+            viewModel.setPreferredAgeMax(maxAgeRange)
+        }
 
         // ---------- 경비 rangeSlider ----------
         binding.budgetSlider.setCustomThumbDrawable(R.drawable.ic_custom_thumb)
@@ -515,6 +693,11 @@ class PostSetUpFragment : Fragment() {
             val maxP = roundStep(clampPrice(toPrice(s.values[1])))
             setEtFormatted(etMin, minP, minWatcher)
             setEtFormatted(etMax, maxP, maxWatcher)
+            
+            // ViewModel에 예산 정보 저장
+            viewModel.setBudgetMin(minP.toInt())
+            viewModel.setBudgetMax(maxP.toInt())
+            
             syncingFromSlider = false
         })
 
@@ -565,6 +748,19 @@ class PostSetUpFragment : Fragment() {
         updateNextEnabled()
 
         binding.btnNext.setOnClickListener {
+            // ViewModel에 저장된 데이터를 로그에 출력
+            Log.d("PostSetUp", "=== 다음 버튼 클릭 시 저장된 데이터 ===")
+            Log.d("PostSetUp", "출발일: ${viewModel.startDate.value}")
+            Log.d("PostSetUp", "도착일: ${viewModel.endDate.value}")
+            Log.d("PostSetUp", "선호 성별: ${viewModel.preferredGender.value}")
+            Log.d("PostSetUp", "모집 인원: ${viewModel.recruitCapacity.value}")
+            Log.d("PostSetUp", "모집 마감일: ${viewModel.recruitDeadline.value}")
+            Log.d("PostSetUp", "최소 연령대: ${viewModel.preferredAgeMin.value}")
+            Log.d("PostSetUp", "최대 연령대: ${viewModel.preferredAgeMax.value}")
+            Log.d("PostSetUp", "최소 예산: ${viewModel.budgetMin.value}")
+            Log.d("PostSetUp", "최대 예산: ${viewModel.budgetMax.value}")
+            Log.d("PostSetUp", "=====================================")
+            
             findNavController().navigate(R.id.action_postSetUp_to_postContent)
         }
     }
