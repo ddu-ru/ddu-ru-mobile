@@ -44,10 +44,15 @@ object NetworkModule {
 
     fun providePostCreateApi(context: Context): PostCreateService {
         val baseUrl = BuildConfig.BASE_URL
+        val clientWithAuth = OkHttpClient.Builder()
+            .addInterceptor(logging)
+            .addInterceptor(AuthInterceptor(context))
+            .build()
+
         val retrofit =
             Retrofit.Builder()
                 .baseUrl(baseUrl)
-                .client(client)
+                .client(clientWithAuth)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
 
