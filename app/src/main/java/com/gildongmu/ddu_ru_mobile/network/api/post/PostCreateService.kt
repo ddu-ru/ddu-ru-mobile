@@ -7,7 +7,5 @@ import retrofit2.http.Body
 import retrofit2.http.Header
 
 interface PostCreateService {
-    @POST("posts")
-    suspend fun postCreate(
-        @Body post: PostCreateRequest): PostCreateResponse
+    @POST("posts") suspend fun postCreate( @Body post: PostCreateRequest): PostCreateResponse
 }
