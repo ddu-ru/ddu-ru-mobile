@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/postSetUpFragment">
+
+    <fragment
+        android:id="@+id/postSetUpFragment"
+        android:name="com.gildongmu.ddu_ru_mobile.ui.post.PostSetUpFragment"
+        android:label="PostSetUpFragment">
+        
+        <action
+            android:id="@+id/action_postSetUp_to_postContent"
+            app:destination="@id/postContentFragment"
+            app:popUpTo="@id/postSetUpFragment"
+            app:popUpToInclusive="false" />
+            
+    </fragment>
+    
+    <fragment
+        android:id="@+id/postContentFragment"
+        android:name="com.gildongmu.ddu_ru_mobile.ui.post.PostContentFragment"
+        android:label="PostContentFragment" />
+        
+</navigation>

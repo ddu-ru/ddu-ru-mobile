@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="25dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="여행 장소를 알려주세요(필수)"
+            android:textColor="@color/content_text_black"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp" />
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_border_defualt"
+            android:stateListAnimator="@null"
+            android:queryBackground="@null"
+            android:layoutDirection="rtl"
+            android:layout_marginTop="8dp"
+            app:searchIcon="@drawable/ic_searchicon_custom_defualt"
+            app:iconifiedByDefault="false"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="여행 날짜를 알려주세요(필수)"
+            android:textColor="@color/content_text_black"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <Button
+                android:id="@+id/btnDepartureDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="출발일"
+                android:textSize="16sp"
+                android:textColor="@color/sub_gray"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/bg_border_defualt"
+                app:backgroundTint="@null"/>
+            <Button
+                android:id="@+id/btnArrivalDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="도착일"
+                android:textSize="16sp"
+                android:textColor="@color/sub_gray"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/bg_border_defualt"
+                app:backgroundTint="@null"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/calendarWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:background="@drawable/bg_border_selected"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:elevation="4dp"
+            android:padding="16dp">
+
+            <com.kizitonwose.calendar.view.CalendarView
+                android:id="@+id/calendarView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cv_dayViewResource="@layout/calendar_day_layout"
+                app:cv_monthHeaderResource="@layout/calendar_month_header"
+                app:cv_orientation="horizontal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="24dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="모집 인원을 알려주세요"
+                android:gravity="center_vertical"
+                android:textColor="@color/content_text_black"
+                android:layout_gravity="start"
+                android:layout_marginStart="16dp"
+                app:backgroundTint="@null"/>
+
+            <Spinner
+                android:id="@+id/spinnerRecruit"
+                android:layout_width="120dp"
+                android:layout_height="45dp"
+                android:dropDownWidth="match_parent"
+                android:textColor="@color/sub_gray"
+                android:textSize="16sp"
+                android:background="@drawable/bg_border_defualt"
+                android:layout_gravity="end"
+                android:overlapAnchor="false"
+                android:dropDownVerticalOffset="0dp"
+                android:popupBackground="@drawable/bg_spinner_dropdown"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="24dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="모집 기간을 알려주세요"
+                android:gravity="center_vertical"
+                android:textColor="@color/content_text_black"
+                android:layout_gravity="start"
+                android:layout_marginStart="16dp"/>
+
+            <Button
+                android:id="@+id/btnRecruitDeadline"
+                android:layout_width="120dp"
+                android:layout_height="45dp"
+                android:layout_gravity="end"
+                android:background="@drawable/bg_border_defualt"
+                android:overlapAnchor="false"
+                android:text="날짜선택"
+                android:textSize="16sp"
+                android:textColor="@color/sub_gray"
+                app:backgroundTint="@null" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="함께하고 싶은 성별을 알려주세요"
+            android:textColor="@color/content_text_black"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="24dp">
+
+            <Button
+                android:id="@+id/btnMale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="남성"
+                android:textSize="16sp"
+                android:textColor="@color/sub_gray"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/bg_border_defualt"
+                app:backgroundTint="@null"/>
+
+            <Button
+                android:id="@+id/btnFemale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="여성"
+                android:textSize="16sp"
+                android:textColor="@color/sub_gray"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/bg_border_defualt"
+                app:backgroundTint="@null"/>
+
+            <Button
+                android:id="@+id/btnGenderAny"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="상관없음"
+                android:textSize="16sp"
+                android:textColor="@color/sub_gray"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/bg_border_defualt"
+                app:backgroundTint="@null"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="함께하고 싶은 연령대를 알려주세요"
+            android:textColor="@color/content_text_black"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"/>
+
+        <com.google.android.material.slider.RangeSlider
+            android:id="@+id/ageSlider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:values="@array/age_slider_values"
+            android:valueFrom="0"
+            android:valueTo="10"
+            android:stepSize="2"
+            app:materialThemeOverlay="@style/ThemeOverlay.MaterialComponents"
+            app:trackHeight="6dp"
+            app:labelBehavior="gone"
+            app:tickVisible="false"
+            app:trackColorActive="@color/coral_color"
+            app:trackColorInactive="@color/sub_gray"
+            app:haloRadius="0dp"
+            app:backgroundTint="@null"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ageLabels"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/ageSlider"
+            app:layout_constraintEnd_toEndOf="@id/ageSlider"
+            app:layout_constraintTop_toBottomOf="@id/ageSlider">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/g0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.04"
+                android:background="#00FF00"/>
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/g20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.21" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/g40"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.40" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/g60"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.58" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/g80"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.77" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/g100"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.94" />
+
+            <TextView
+                android:id="@+id/age10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="10대"
+                android:textSize="12sp"
+                android:textColor="@color/content_text_black"
+                app:layout_constraintStart_toStartOf="@id/g0"
+                app:layout_constraintEnd_toEndOf="@id/g0"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/age20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20대"
+                android:textSize="12sp"
+                android:textColor="@color/content_text_black"
+                app:layout_constraintStart_toStartOf="@id/g20"
+                app:layout_constraintEnd_toEndOf="@id/g20"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/age30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="30대"
+                android:textSize="12sp"
+                android:textColor="@color/content_text_black"
+                app:layout_constraintStart_toStartOf="@id/g40"
+                app:layout_constraintEnd_toEndOf="@id/g40"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/age40"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="40대"
+                android:textSize="12sp"
+                android:textColor="@color/content_text_black"
+                app:layout_constraintStart_toStartOf="@id/g60"
+                app:layout_constraintEnd_toEndOf="@id/g60"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/age50"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="50대"
+                android:textSize="12sp"
+                android:textColor="@color/content_text_black"
+                app:layout_constraintStart_toStartOf="@id/g80"
+                app:layout_constraintEnd_toEndOf="@id/g80"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/age60"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="60대이상"
+                android:textSize="12sp"
+                android:textColor="@color/content_text_black"
+                app:layout_constraintStart_toStartOf="@id/g100"
+                app:layout_constraintEnd_toEndOf="@id/g100"
+                app:layout_constraintTop_toTopOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="예상경비를 알려주세요"
+            android:textColor="@color/content_text_black"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"/>
+
+        <com.google.android.material.slider.RangeSlider
+            android:id="@+id/budgetSlider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:values="@array/age_slider_values"
+            android:valueFrom="0"
+            android:valueTo="10"
+            android:stepSize="0.0001"
+            app:materialThemeOverlay="@style/ThemeOverlay.MaterialComponents"
+            app:labelBehavior="gone"
+            app:trackHeight="6dp"
+            app:backgroundTint="@null"
+            app:tickVisible="false"
+            app:haloRadius="0dp"
+            app:trackColorActive="@color/coral_color"
+            app:trackColorInactive="@color/sub_gray"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/editTextBudgetMin"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:gravity="start"
+                android:layout_weight="1"
+                android:background="@drawable/bg_border_defualt"
+                android:padding="6dp"/>
+
+            <View
+                android:layout_width="100dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"/>
+
+            <EditText
+                android:id="@+id/editTextBudgetMax"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="10000000"
+                android:layout_weight="1"
+                android:background="@drawable/bg_border_defualt"
+                android:padding="6dp"/>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnNext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_border_defualt"
+            android:gravity="center"
+            android:text="다음"
+            android:textColor="@color/sub_gray"
+            android:textSize="17sp"
+            app:backgroundTint="@null" />
+
+
+    </LinearLayout>
+
+</ScrollView>

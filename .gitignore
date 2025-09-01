@@ -3,6 +3,8 @@
 /local.properties
 /.idea/caches
 /.idea/libraries
+/.idea/appInsightsSettings.xml
+/.idea/inspectionProfiles/Project_Default.xml
 /.idea/modules.xml
 /.idea/workspace.xml
 /.idea/navEditor.xml
@@ -13,3 +15,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+app/google-services.json
+/app/src/main/java/com/gildongmu/ddu_ru_mobile/DevEntryActivity.kt
+/.idea/deviceManager.xml

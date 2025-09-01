@@ -1,0 +1,772 @@
+package com.gildongmu.ddu_ru_mobile.ui.post
+
+import android.graphics.Rect
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.PopupWindow
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import com.gildongmu.ddu_ru_mobile.R
+import com.kizitonwose.calendar.core.CalendarDay
+import com.kizitonwose.calendar.core.CalendarMonth
+import com.kizitonwose.calendar.core.DayPosition
+import com.kizitonwose.calendar.view.MonthDayBinder
+import com.kizitonwose.calendar.view.MonthHeaderFooterBinder
+import com.kizitonwose.calendar.view.ViewContainer
+import java.time.LocalDate
+import java.time.YearMonth
+import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
+import java.util.Locale
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
+import android.widget.EditText
+import androidx.navigation.fragment.findNavController
+import com.gildongmu.ddu_ru_mobile.databinding.FragmentPostSetupBinding
+import com.google.android.material.slider.RangeSlider
+import java.text.NumberFormat
+
+class PostSetUpFragment : Fragment() {
+
+    private var _binding: FragmentPostSetupBinding? = null
+    private val binding get() = _binding!!
+
+    // ViewModel 추가
+    private val viewModel: PostViewModel by activityViewModels()
+
+    private val startMonth = YearMonth.now().minusMonths(100)
+    private val endMonth = YearMonth.now().plusMonths(100)
+    private val currentMonth = YearMonth.now()
+    private val firstDayOfWeek = java.time.DayOfWeek.MONDAY
+
+    private enum class EditTarget { START, END, NONE }
+    private var editTarget: EditTarget = EditTarget.NONE
+    private var selectedStartDate: LocalDate? = null
+    private var selectedEndDate: LocalDate? = null
+    private val today: LocalDate = LocalDate.now()
+
+    enum class Gender { M, F, A }
+    private var selectedGender: Gender? = null
+
+    // ---------- Observer 설정 ----------
+    private fun setupObservers() {
+        // ViewModel의 LiveData를 observe
+        viewModel.startDate.observe(viewLifecycleOwner, Observer { startDate ->
+            // 시작일이 변경되었을 때의 처리
+            if (startDate != "출발일" && startDate.isNotEmpty()) {
+                binding.btnDepartureDate.text = startDate
+                binding.btnDepartureDate.asSelected()
+            }
+        })
+        
+        viewModel.endDate.observe(viewLifecycleOwner, Observer { endDate ->
+            // 종료일이 변경되었을 때의 처리
+            if (endDate != "도착일" && endDate.isNotEmpty()) {
+                binding.btnArrivalDate.text = endDate
+                binding.btnArrivalDate.asSelected()
+            }
+        })
+        
+        viewModel.recruitDeadline.observe(viewLifecycleOwner, Observer { deadline ->
+            // 모집마감일이 변경되었을 때의 처리
+            if (deadline != "모집마감일" && deadline.isNotEmpty()) {
+                binding.btnRecruitDeadline.text = deadline
+                binding.btnRecruitDeadline.asSelected()
+            }
+        })
+        
+        viewModel.preferredGender.observe(viewLifecycleOwner, Observer { gender ->
+            // 선호 성별이 변경되었을 때의 처리
+            when (gender) {
+                "M" -> {
+                    selectedGender = Gender.M
+                    binding.btnMale.asSelected()
+                    binding.btnFemale.asDefault()
+                    binding.btnGenderAny.asDefault()
+                }
+                "F" -> {
+                    selectedGender = Gender.F
+                    binding.btnMale.asDefault()
+                    binding.btnFemale.asSelected()
+                    binding.btnGenderAny.asDefault()
+                }
+                "A" -> {
+                    selectedGender = Gender.A
+                    binding.btnMale.asDefault()
+                    binding.btnFemale.asDefault()
+                    binding.btnGenderAny.asSelected()
+                }
+                else -> {
+                    selectedGender = null
+                    binding.btnMale.asDefault()
+                    binding.btnFemale.asDefault()
+                    binding.btnGenderAny.asDefault()
+                }
+            }
+        })
+        
+        viewModel.recruitCapacity.observe(viewLifecycleOwner, Observer { capacity ->
+            // 모집 인원이 변경되었을 때의 처리
+            if (capacity > 0) {
+                binding.spinnerRecruit.setSelection(capacity - 1)
+            }
+        })
+        
+        viewModel.budgetMin.observe(viewLifecycleOwner, Observer { minBudget ->
+            // 최소 예산이 변경되었을 때의 처리
+        })
+        
+        viewModel.budgetMax.observe(viewLifecycleOwner, Observer { maxBudget ->
+            // 최대 예산이 변경되었을 때의 처리
+        })
+    }
+
+    // ---------- ViewContainers ----------
+    inner class DayViewContainer(view: View) : ViewContainer(view) {
+        lateinit var day: CalendarDay
+        val textView: TextView = view.findViewById(R.id.calendarDayText)
+    }
+
+    inner class MonthViewContainer(view: View) : ViewContainer(view) {
+        val textMonth: TextView = view.findViewById(R.id.textMonth)
+        val textYear: TextView = view.findViewById(R.id.textYear)
+        val btnPrev: ImageButton = view.findViewById(R.id.btnPreviousMonth)
+        val btnNext: ImageButton = view.findViewById(R.id.btnNextMonth)
+    }
+
+    // ---------- 유틸 ----------
+    fun View.hideIfTouchedOutside(target: View) {
+        this.setOnTouchListener { view, event ->
+            if (target.isVisible && event.action == MotionEvent.ACTION_DOWN) {
+                val rect = Rect()
+                target.getGlobalVisibleRect(rect)
+                if (!rect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+                    target.isVisible = false
+                }
+            }
+            view.performClick()
+            false
+        }
+    }
+
+    private var popupWindow: PopupWindow? = null
+
+    private fun showDropdown(dropdownView: View, anchorView: View) {
+        popupWindow?.dismiss()
+        popupWindow = PopupWindow(
+            dropdownView,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            true
+        ).apply {
+            elevation = 8f
+            setBackgroundDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.bg_dropdown))
+            showAsDropDown(anchorView, 0, 8)
+        }
+    }
+
+    private fun showYearDropdown(anchorView: View, currentYearMonth: YearMonth) {
+        val dropdownView = LayoutInflater.from(requireContext()).inflate(R.layout.dropdown_year_picker, null)
+        val yearContainer = dropdownView.findViewById<LinearLayout>(R.id.yearContainer)
+        val currentYear = currentYearMonth.year
+        for (year in currentYear..(currentYear + 50)) {
+            val item = LayoutInflater.from(requireContext()).inflate(R.layout.dropdown_item, yearContainer, false)
+            val tv = item.findViewById<TextView>(R.id.dropdownItemText)
+            tv.text = "${year}년"
+            tv.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    if (year == currentYear) R.color.main_color else R.color.sub_gray
+                )
+            )
+            tv.setOnClickListener {
+                val newYm = YearMonth.of(year, currentYearMonth.monthValue)
+                binding.calendarView.scrollToMonth(newYm)
+                popupWindow?.dismiss()
+            }
+            yearContainer.addView(item)
+        }
+        showDropdown(dropdownView, anchorView)
+    }
+
+    private fun showMonthDropdown(anchorView: View, currentYearMonth: YearMonth) {
+        val dropdownView = LayoutInflater.from(requireContext()).inflate(R.layout.dropdown_month_picker, null)
+        val monthContainer = dropdownView.findViewById<LinearLayout>(R.id.monthContainer)
+        val months = arrayOf("1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월")
+        months.forEachIndexed { index, label ->
+            val item = LayoutInflater.from(requireContext()).inflate(R.layout.dropdown_item, monthContainer, false)
+            val tv = item.findViewById<TextView>(R.id.dropdownItemText)
+            tv.text = label
+            tv.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    if (index + 1 == currentYearMonth.monthValue) R.color.main_color else R.color.sub_gray
+                )
+            )
+            tv.setOnClickListener {
+                val newYm = YearMonth.of(currentYearMonth.year, index + 1)
+                binding.calendarView.scrollToMonth(newYm)
+                popupWindow?.dismiss()
+            }
+            monthContainer.addView(item)
+        }
+        showDropdown(dropdownView, anchorView)
+    }
+
+    // ---------- 버튼 스타일 ----------
+    private fun Button.asSelected() {
+        setTextColor(ContextCompat.getColor(requireContext(), R.color.main_color))
+        setBackgroundResource(R.drawable.bg_border_selected)
+    }
+    private fun Button.asDefault() {
+        setTextColor(ContextCompat.getColor(requireContext(), R.color.sub_gray))
+        setBackgroundResource(R.drawable.bg_border_defualt)
+    }
+    private fun Button.ifSelectedThen(isSel: Boolean) {
+        if (isSel) asSelected() else asDefault()
+    }
+
+    private fun applyGenderSelection(newGender: Gender) {
+        selectedGender = if (selectedGender == newGender) null else newGender
+        with(binding) {
+            btnMale.ifSelectedThen(newGender == Gender.M && selectedGender == Gender.M)
+            btnFemale.ifSelectedThen(newGender == Gender.F && selectedGender == Gender.F)
+            btnGenderAny.ifSelectedThen(newGender == Gender.A && selectedGender == Gender.A)
+        }
+        
+        // ViewModel에 성별 정보 저장
+        val genderText = when (selectedGender) {
+            Gender.M -> "M"
+            Gender.F -> "F"
+            Gender.A -> "A"
+            null -> ""
+        }
+        viewModel.setPreferredGender(genderText)
+        updateNextEnabled()
+    }
+
+    // ---------- "다음" 활성화 토글 ----------
+    private fun updateNextEnabled() {
+        val placeOk = !binding.searchView.query.isNullOrBlank()
+        val datesOk = (selectedStartDate != null && selectedEndDate != null)
+        val genderOk = (selectedGender != null)
+        val recruitOk = (binding.spinnerRecruit.selectedItemPosition != 8) // 힌트 인덱스 제외
+        val deadlineOk = binding.btnRecruitDeadline.text?.toString()?.contains("-") == true
+
+        val allOk = placeOk && datesOk && genderOk && recruitOk && deadlineOk
+
+        binding.btnNext.isEnabled = allOk
+        if (allOk) {
+            binding.btnNext.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+            binding.btnNext.setBackgroundResource(R.drawable.bg_filled_selected)
+        } else {
+            binding.btnNext.setTextColor(ContextCompat.getColor(requireContext(), R.color.sub_gray))
+            binding.btnNext.setBackgroundResource(R.drawable.bg_border_defualt)
+        }
+    }
+
+    // ---------- onCreateView ----------
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentPostSetupBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    // ---------- onViewCreated ----------
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Observer 설정
+        setupObservers()
+
+        // SearchView
+        val searchIcon = binding.searchView.findViewById<ImageView>(androidx.appcompat.R.id.search_mag_icon)
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?) = true
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (!newText.isNullOrEmpty()) {
+                    binding.searchView.setBackgroundResource(R.drawable.bg_border_selected)
+                    searchIcon.setImageResource(R.drawable.ic_searchicon_custom_pressed)
+                } else {
+                    binding.searchView.setBackgroundResource(R.drawable.bg_border_defualt)
+                    searchIcon.setImageResource(R.drawable.ic_searchicon_custom_defualt)
+                }
+                updateNextEnabled()
+                return true
+            }
+        })
+
+        // ---------- Calendar ----------
+        binding.calendarView.setup(startMonth, endMonth, firstDayOfWeek)
+        binding.calendarView.scrollToMonth(currentMonth)
+
+        binding.btnDepartureDate.setOnClickListener {
+            editTarget = EditTarget.START
+            binding.calendarWrapper.isVisible = true
+        }
+        binding.btnArrivalDate.setOnClickListener {
+            editTarget = EditTarget.END
+            binding.calendarWrapper.isVisible = true
+        }
+
+        binding.calendarView.monthHeaderBinder =
+            object : MonthHeaderFooterBinder<MonthViewContainer> {
+                override fun create(view: View) = MonthViewContainer(view)
+                override fun bind(container: MonthViewContainer, month: CalendarMonth) {
+                    container.textMonth.text =
+                        month.yearMonth.month.getDisplayName(TextStyle.FULL, Locale.KOREAN)
+                    container.textYear.text = month.yearMonth.year.toString()
+
+                    container.textMonth.setOnClickListener {
+                        showMonthDropdown(container.textMonth, month.yearMonth)
+                    }
+                    container.textYear.setOnClickListener {
+                        showYearDropdown(container.textYear, month.yearMonth)
+                    }
+                    container.btnPrev.setOnClickListener {
+                        binding.calendarView.smoothScrollToMonth(month.yearMonth.minusMonths(1))
+                    }
+                    container.btnNext.setOnClickListener {
+                        binding.calendarView.smoothScrollToMonth(month.yearMonth.plusMonths(1))
+                    }
+                }
+            }
+
+        binding.calendarView.dayBinder =
+            object : MonthDayBinder<DayViewContainer> {
+                override fun create(view: View) = DayViewContainer(view)
+
+                override fun bind(container: DayViewContainer, day: CalendarDay) {
+                    container.day = day
+                    val tv = container.textView
+                    tv.text = day.date.dayOfMonth.toString()
+
+                    // 기본 스타일
+                    if (day.position == DayPosition.MonthDate) {
+                        tv.setTextColor(requireContext().getColor(R.color.title_text_black))
+                        tv.background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_filled_default)
+                    } else {
+                        tv.setTextColor(requireContext().getColor(R.color.sub_gray))
+                        tv.background = null
+                    }
+
+                    // 선택 범위 스타일
+                    val start = selectedStartDate
+                    val end = selectedEndDate
+                    when {
+                        start != null && start == day.date -> {
+                            tv.background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_filled_selected)
+                            tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                        }
+                        end != null && end == day.date -> {
+                            tv.background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_filled_selected)
+                            tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                        }
+                        start != null && end != null && (day.date > start && day.date < end) -> {
+                            tv.background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_selected_middle_day)
+                            tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.main_color))
+                        }
+                        day.date == today -> {
+                            tv.background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_border_selected)
+                            tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.calendar_text_black))
+                        }
+                        else -> {
+                            if (day.position == DayPosition.MonthDate) {
+                                tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.calendar_text_black))
+                                tv.background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_filled_default)
+                            } else {
+                                tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.sub_gray))
+                                tv.background = null
+                            }
+                        }
+                    }
+
+                    // 클릭 로직
+                    container.view.setOnClickListener {
+                        val clicked = day.date
+                        val fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+                        // 둘 다 선택된 상태에서 아무 날짜 탭 → 출발일부터 다시 선택
+                        if (selectedStartDate != null && selectedEndDate != null && editTarget != EditTarget.END) {
+                            selectedStartDate = clicked
+                            selectedEndDate = null
+                            
+                            val fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                            binding.btnDepartureDate.text = selectedStartDate?.format(fmt) ?: "출발일 선택"
+                            binding.btnDepartureDate.asSelected()
+                            binding.btnArrivalDate.text = "도착일 선택"
+                            binding.btnArrivalDate.asDefault()
+                            
+                            // ViewModel 업데이트
+                            viewModel.setStartDate(selectedStartDate?.format(fmt)?:"")
+                            viewModel.setEndDate("도착일")
+                            
+                            binding.calendarView.notifyCalendarChanged()
+                            updateNextEnabled()
+                            return@setOnClickListener
+                        }
+
+                        when (editTarget) {
+                            EditTarget.START -> {
+                                selectedStartDate = clicked
+                                if (selectedEndDate != null && selectedEndDate!! < selectedStartDate) {
+                                    selectedEndDate = null
+                                }
+                                editTarget = EditTarget.NONE
+                                
+                                // 버튼 텍스트 업데이트
+                                binding.btnDepartureDate.text = selectedStartDate?.format(fmt)
+                                binding.btnDepartureDate.asSelected()
+                                if (selectedEndDate == null) {
+                                    binding.btnArrivalDate.text = "도착일 선택"
+                                    binding.btnArrivalDate.asDefault()
+                                }
+                                
+                                // ViewModel 업데이트
+                                viewModel.setStartDate(selectedStartDate?.format(fmt) ?: "")
+                                if (selectedEndDate == null) {
+                                    viewModel.setEndDate("도착일")
+                                }
+                                
+                                binding.calendarView.notifyCalendarChanged()
+                                updateNextEnabled()
+                            }
+
+                            EditTarget.END -> {
+                                if (selectedStartDate == null) {
+                                    Toast.makeText(requireContext(), "출발일을 먼저 선택하세요", Toast.LENGTH_SHORT).show()
+                                    return@setOnClickListener
+                                }
+                                if (clicked < selectedStartDate) {
+                                    selectedStartDate = clicked
+
+                                    val fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                                    binding.btnDepartureDate.text = selectedStartDate?.format(fmt)
+                                    binding.btnDepartureDate.asSelected()
+                                    if (selectedEndDate != null) {
+                                        binding.btnArrivalDate.text = selectedEndDate?.format(fmt)
+                                        binding.btnArrivalDate.asSelected()
+                                    } else {
+                                        binding.btnArrivalDate.text = "도착일 선택"
+                                        binding.btnArrivalDate.asDefault()
+                                    }
+
+                                    editTarget = EditTarget.NONE
+                                    binding.calendarView.notifyCalendarChanged()
+                                    updateNextEnabled()
+                                    return@setOnClickListener
+                                }
+                                if (clicked <= today) {
+                                    Toast.makeText(requireContext(), "도착일은 오늘 이후여야 합니다", Toast.LENGTH_SHORT).show()
+                                    return@setOnClickListener
+                                }
+                                selectedEndDate = clicked
+                                editTarget = EditTarget.NONE
+                                
+                                // 버튼 텍스트 업데이트
+                                binding.btnArrivalDate.text = selectedEndDate?.format(fmt)
+                                binding.btnArrivalDate.asSelected()
+                                
+                                // ViewModel 업데이트
+                                viewModel.setEndDate(selectedEndDate?.format(fmt)?:"")
+                            }
+
+                            EditTarget.NONE -> {
+                                if (selectedStartDate == null) {
+                                    selectedStartDate = clicked
+                                    selectedEndDate = null
+                                } else {
+                                    if (clicked < selectedStartDate) {
+                                        // 🔁 더 이른 날짜 → 출발일만 교체
+                                        selectedStartDate = clicked
+                                        // 도착일은 아직 없음(그대로 null)
+                                    } else {
+                                        if (clicked <= today) {
+                                            Toast.makeText(requireContext(), "도착일은 오늘 이후여야 합니다", Toast.LENGTH_SHORT).show()
+                                            return@setOnClickListener
+                                        }
+                                        selectedEndDate = clicked
+                                    }
+                                }
+                                
+                                // 버튼 텍스트 업데이트
+                                if (selectedStartDate != null) {
+                                    binding.btnDepartureDate.text = selectedStartDate?.format(fmt)
+                                    binding.btnDepartureDate.asSelected()
+                                }
+                                if (selectedEndDate != null) {
+                                    binding.btnArrivalDate.text = selectedEndDate?.format(fmt)
+                                    binding.btnArrivalDate.asSelected()
+                                }
+                                
+                                // ViewModel 업데이트
+                                if (selectedStartDate != null) {
+                                    viewModel.setStartDate(selectedStartDate?.format(fmt)?:"")
+                                }
+                                if (selectedEndDate != null) {
+                                    viewModel.setEndDate(selectedEndDate?.format(fmt)?:"")
+                                }
+                                
+                                binding.calendarView.notifyCalendarChanged()
+                                updateNextEnabled()
+                            }
+                        }
+
+                        // 버튼 텍스트/스타일 갱신 (중복 제거)
+                        binding.calendarView.notifyCalendarChanged()
+                        updateNextEnabled()
+                    }
+                }
+            }
+
+        // 캘린더 외 영역 터치 시 닫기
+        binding.scrollView.hideIfTouchedOutside(binding.calendarWrapper)
+
+        // ---------- 인원수 스피너 ----------
+        val recruitItems = resources.getStringArray(R.array.recruitArray)
+        val recruitAdapter =
+            BoardSpinnerAdapter(requireContext(), R.layout.spinner_item, R.id.spinnerText, recruitItems)
+        binding.spinnerRecruit.adapter = recruitAdapter
+
+        binding.spinnerRecruit.setSelection(binding.spinnerRecruit.adapter.count)
+        binding.spinnerRecruit.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                    if (view != null) {
+                        val tv = view.findViewById<TextView>(R.id.spinnerText)
+                        if (position == 8) {
+                            binding.spinnerRecruit.setBackgroundResource(R.drawable.bg_border_defualt)
+                        } else {
+                            tv?.setTextColor(ContextCompat.getColor(requireContext(), R.color.main_color))
+                            binding.spinnerRecruit.setBackgroundResource(R.drawable.bg_border_selected)
+                            (binding.spinnerRecruit.adapter as? BoardSpinnerAdapter)?.setSelectedPosition(position)
+                        }
+                    } else {
+                        // view가 null인 경우에도 배경 설정
+                        if (position == 8) {
+                            binding.spinnerRecruit.setBackgroundResource(R.drawable.bg_border_defualt)
+                        } else {
+                            binding.spinnerRecruit.setBackgroundResource(R.drawable.bg_border_selected)
+                            (binding.spinnerRecruit.adapter as? BoardSpinnerAdapter)?.setSelectedPosition(position)
+                        }
+                    }
+                    
+                    // ViewModel에 모집 인원 저장 (힌트 제외)
+                    if (position != 8) {
+                        viewModel.setRecruitCapacity(position + 1)
+                    } else {
+                        viewModel.setRecruitCapacity(0)
+                    }
+                    
+                    updateNextEnabled()
+                }
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    updateNextEnabled()
+                }
+            }
+
+        // ---------- 모집기간 바텀시트 ----------
+        fun modalWithRoundCorner() {
+            val modal = ModalBottomSheet()
+            modal.setStyle(DialogFragment.STYLE_NORMAL, R.style.RoundCornerBottomSheetDialogTheme)
+            modal.apply {
+                onDatePicked = { date ->
+                    val pretty = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                    binding.btnRecruitDeadline.text = pretty
+                    binding.btnRecruitDeadline.asSelected()
+                    // ViewModel에 모집 마감일 저장
+                    viewModel.setRecruitDeadline(pretty)
+                    updateNextEnabled()
+                }
+            }.show(childFragmentManager, ModalBottomSheet.TAG)
+        }
+        binding.btnRecruitDeadline.setOnClickListener { modalWithRoundCorner() }
+
+        // ---------- 성별 선택 ----------
+        binding.btnMale.setOnClickListener { applyGenderSelection(Gender.M) }
+        binding.btnFemale.setOnClickListener { applyGenderSelection(Gender.F) }
+        binding.btnGenderAny.setOnClickListener { applyGenderSelection(Gender.A) }
+
+        // ---------- 나이 rangeSlider ----------
+        binding.ageSlider.setCustomThumbDrawable(R.drawable.ic_custom_thumb)
+
+        // 연령대 슬라이더 값 범위 설정 (10세 ~ 70세, 5세 간격)
+        binding.ageSlider.valueFrom = 10f
+        binding.ageSlider.valueTo = 60f
+        binding.ageSlider.stepSize = 10f
+        binding.ageSlider.setValues(10f, 60f) // 기본값: 양 끝 (10세~70세)
+
+        // 연령대 슬라이더 변경 리스너
+        binding.ageSlider.addOnChangeListener { slider, _, _ ->
+            val minAge = slider.values[0].toInt()
+            val maxAge = slider.values[1].toInt()
+            
+            // 디버깅 로그 추가
+            Log.d("AgeSlider", "슬라이더 값 변경: minAge=$minAge, maxAge=$maxAge")
+            
+            // 연령대를 AGE_10s 형식으로 변환
+            val minAgeRange = when {
+                minAge < 20 -> "AGE_10s"
+                minAge < 30 -> "AGE_20s"
+                minAge < 40 -> "AGE_30s"
+                minAge < 50 -> "AGE_40s"
+                minAge < 60 -> "AGE_50s"
+                else -> "AGE_60s"
+            }
+            
+            val maxAgeRange = when {
+                maxAge < 20 -> "AGE_10s"
+                maxAge < 30 -> "AGE_20s"
+                maxAge < 40 -> "AGE_30s"
+                maxAge < 50 -> "AGE_40s"
+                maxAge < 60 -> "AGE_50s"
+                else -> "AGE_60s"
+            }
+            
+            // 디버깅 로그 추가
+            Log.d("AgeSlider", "변환된 연령대: minAgeRange=$minAgeRange, maxAgeRange=$maxAgeRange")
+            
+            // ViewModel에 연령대 저장
+            viewModel.setPreferredAgeMin(minAgeRange)
+            viewModel.setPreferredAgeMax(maxAgeRange)
+        }
+
+        // ---------- 경비 rangeSlider ----------
+        binding.budgetSlider.setCustomThumbDrawable(R.drawable.ic_custom_thumb)
+
+        val slider = binding.budgetSlider
+        val etMin: EditText = binding.editTextBudgetMin
+        val etMax: EditText = binding.editTextBudgetMax
+
+        val PRICE_MIN = 0L
+        val PRICE_MAX = 10_000_000L
+        val SCALE = 1_000_000f
+        val STEP = 100L
+
+        val formatter: NumberFormat = NumberFormat.getInstance(java.util.Locale.KOREA)
+
+        fun clampPrice(p: Long): Long = p.coerceIn(PRICE_MIN, PRICE_MAX)
+        fun roundStep(p: Long): Long = (p / STEP) * STEP
+        fun toPrice(v: Float): Long = (v * SCALE).toLong()
+        fun toSlider(p: Long): Float = (p.toFloat() / SCALE).coerceIn(0f, 10f)
+        fun parsePrice(cs: CharSequence?): Long {
+            val digits = cs?.toString()?.replace("[^0-9]".toRegex(), "") ?: return 0L
+            return digits.toLongOrNull() ?: 0L
+        }
+        fun setEtFormatted(et: EditText, value: Long, watcher: TextWatcher?) {
+            watcher?.let { et.removeTextChangedListener(it) }
+            val formatted = formatter.format(value)
+            et.setText(formatted)
+            et.setSelection(et.text.length)
+            watcher?.let { et.addTextChangedListener(it) }
+        }
+
+        var syncingFromSlider = false
+        var syncingFromEdit = false
+
+        var minWatcher: TextWatcher? = null
+        var maxWatcher: TextWatcher? = null
+
+        slider.addOnChangeListener(RangeSlider.OnChangeListener { s, _, fromUser ->
+            if (!fromUser || syncingFromEdit) return@OnChangeListener
+            syncingFromSlider = true
+            val minP = roundStep(clampPrice(toPrice(s.values[0])))
+            val maxP = roundStep(clampPrice(toPrice(s.values[1])))
+            setEtFormatted(etMin, minP, minWatcher)
+            setEtFormatted(etMax, maxP, maxWatcher)
+            
+            // ViewModel에 예산 정보 저장
+            viewModel.setBudgetMin(minP.toInt())
+            viewModel.setBudgetMax(maxP.toInt())
+            
+            syncingFromSlider = false
+        })
+
+        minWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                if (syncingFromSlider) return
+                syncingFromEdit = true
+                val minP = roundStep(clampPrice(parsePrice(s)))
+                val maxP = roundStep(clampPrice(parsePrice(etMax.text)))
+                val fixedMin = minP.coerceAtMost(maxP)
+                slider.setValues(toSlider(fixedMin), toSlider(maxP))
+                setEtFormatted(etMin, fixedMin, this)
+                syncingFromEdit = false
+            }
+        }
+        etMin.addTextChangedListener(minWatcher)
+
+        maxWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                if (syncingFromSlider) return
+                syncingFromEdit = true
+                val minP = roundStep(clampPrice(parsePrice(etMin.text)))
+                val maxP = roundStep(clampPrice(parsePrice(s)))
+                val fixedMax = maxP.coerceAtLeast(minP)
+                slider.setValues(toSlider(minP), toSlider(fixedMax))
+                setEtFormatted(etMax, fixedMax, this)
+                syncingFromEdit = false
+            }
+        }
+        etMax.addTextChangedListener(maxWatcher)
+
+        run {
+            val initMin = roundStep(clampPrice(parsePrice(etMin.text)))
+            val initMax = roundStep(clampPrice(parsePrice(etMax.text)))
+            val minP = kotlin.math.min(initMin, initMax)
+            val maxP = kotlin.math.max(initMin, initMax)
+            slider.setValues(toSlider(minP), toSlider(maxP))
+            setEtFormatted(etMin, minP, minWatcher)
+            setEtFormatted(etMax, maxP, maxWatcher)
+        }
+
+
+        // 초기 상태 반영
+        updateNextEnabled()
+
+        binding.btnNext.setOnClickListener {
+            // ViewModel에 저장된 데이터를 로그에 출력
+            Log.d("PostSetUp", "=== 다음 버튼 클릭 시 저장된 데이터 ===")
+            Log.d("PostSetUp", "출발일: ${viewModel.startDate.value}")
+            Log.d("PostSetUp", "도착일: ${viewModel.endDate.value}")
+            Log.d("PostSetUp", "선호 성별: ${viewModel.preferredGender.value}")
+            Log.d("PostSetUp", "모집 인원: ${viewModel.recruitCapacity.value}")
+            Log.d("PostSetUp", "모집 마감일: ${viewModel.recruitDeadline.value}")
+            Log.d("PostSetUp", "최소 연령대: ${viewModel.preferredAgeMin.value}")
+            Log.d("PostSetUp", "최대 연령대: ${viewModel.preferredAgeMax.value}")
+            Log.d("PostSetUp", "최소 예산: ${viewModel.budgetMin.value}")
+            Log.d("PostSetUp", "최대 예산: ${viewModel.budgetMax.value}")
+            Log.d("PostSetUp", "=====================================")
+            
+            findNavController().navigate(R.id.action_postSetUp_to_postContent)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}

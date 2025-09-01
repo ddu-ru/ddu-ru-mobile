@@ -1,22 +1,48 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.protobuf)
 }
 
 android {
-    namespace = "com.example.ddu_ru_mobile"
+    namespace = "com.gildongmu.ddu_ru_mobile"
     compileSdk = 35
 
+    buildFeatures {
+        compose = true
+        buildConfig = true
+        viewBinding = true
+    }
+
     defaultConfig {
-        applicationId = "com.example.ddu_ru_mobile"
+        applicationId = "com.gildongmu.ddu_ru_mobile"
         minSdk = 34
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+
+        if (localPropertiesFile.exists()) {
+            localProperties.load(localPropertiesFile.inputStream())
+
+            //noinspection WrongGradleMethod
+            listOf("GOOGLE_CLIENT_ID", "BASE_URL","GOOGLE_WEB_CLIENT_ID","KAKAO_NATIVE_APP_KEY").forEach { key ->
+                localProperties.getProperty(key)?.let { value ->
+                    this@defaultConfig.buildConfigField("String", key, "\"$value\"")
+
+                    if (key == "KAKAO_NATIVE_APP_KEY") {
+                        manifestPlaceholders[key] = value
+                    }
+                }
+            }
+        }
     }
+
 
     buildTypes {
         release {
@@ -26,21 +52,41 @@ android {
                 "proguard-rules.pro"
             )
         }
+        compileOptions {
+            sourceCompatibility = JavaVersion.VERSION_1_8
+            targetCompatibility = JavaVersion.VERSION_1_8
+        }
+
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
-    buildFeatures {
-        compose = true
+}
+
+protobuf {
+    protoc {
+        artifact = libs.protobuf.compiler.get().toString()
+    }
+    
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                create("java") {
+                    option("lite")
+                }
+            }
+        }
     }
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -49,11 +95,33 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.media3.common.ktx)
+    implementation(libs.play.services.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.androidx.cardview)
+    implementation(libs.androidx.credentials)
+    implementation(libs.google.identity.googleid)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.androidx.datastore.core)
+    implementation(libs.protobuf.javalite)
+    implementation(libs.androidx.datastore)
+    implementation("com.kakao.sdk:v2-user:2.20.1")
+    implementation("com.kakao.sdk:v2-share:2.20.1")
+    implementation("com.kakao.sdk:v2-talk:2.20.1")
+    implementation("com.kakao.sdk:v2-cert:2.20.1")
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+    implementation("androidx.appcompat:appcompat:1.7.1")
+    implementation("com.kizitonwose.calendar:view:2.3.0")
+    implementation("com.google.android.material:material:1.12.0")
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 }
