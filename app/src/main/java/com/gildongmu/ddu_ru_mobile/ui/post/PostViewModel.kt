@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 
 class PostViewModel: ViewModel() {
 
-    private val _destinationId = MutableLiveData<Long>(0)
+    private val _destinationId = MutableLiveData<Long>(1)
     val destinationId: LiveData<Long> = _destinationId
 
     private val _title = MutableLiveData<String>("")
@@ -30,10 +30,10 @@ class PostViewModel: ViewModel() {
     private val _preferredGender = MutableLiveData<String>("")
     val preferredGender: LiveData<String> = _preferredGender
 
-    private val _preferredAgeMin = MutableLiveData<String>("")
+    private val _preferredAgeMin = MutableLiveData<String>("AGE_10s")
     val preferredAgeMin: LiveData<String> = _preferredAgeMin
 
-    private val _preferredAgeMax = MutableLiveData<String>("")
+    private val _preferredAgeMax = MutableLiveData<String>("AGE_60s")
     val preferredAgeMax: LiveData<String> = _preferredAgeMax
 
     private val _budgetMin = MutableLiveData<Int>(0)
