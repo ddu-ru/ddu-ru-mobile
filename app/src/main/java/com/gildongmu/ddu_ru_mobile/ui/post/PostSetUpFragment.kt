@@ -267,7 +267,7 @@ class PostSetUpFragment : Fragment() {
         val datesOk = (selectedStartDate != null && selectedEndDate != null)
         val genderOk = (selectedGender != null)
         val recruitOk = (binding.spinnerRecruit.selectedItemPosition != 8) // 힌트 인덱스 제외
-        val deadlineOk = binding.btnRecruitDeadline.text?.toString()?.contains(".") == true
+        val deadlineOk = binding.btnRecruitDeadline.text?.toString()?.contains("-") == true
 
         val allOk = placeOk && datesOk && genderOk && recruitOk && deadlineOk
 
