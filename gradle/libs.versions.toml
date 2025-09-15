@@ -21,6 +21,9 @@ protobufCompiler = "3.25.1"
 protobufJavalite = "3.25.1"
 datastore = "1.0.0"
 datastoreCoreAndroid = "1.1.7"
+material = "1.12.0"
+activity = "1.10.1"
+constraintlayout = "2.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -51,6 +54,9 @@ protobuf-javalite = { group = "com.google.protobuf", name = "protobuf-javalite",
 
 protobuf-compiler = { group = "com.google.protobuf", name = "protoc", version.ref = "protobufCompiler" }
 androidx-datastore-core-android = { group = "androidx.datastore", name = "datastore-core-android", version.ref = "datastoreCoreAndroid" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
