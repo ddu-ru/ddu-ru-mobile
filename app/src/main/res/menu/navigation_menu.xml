@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/navigation_board"
+        android:icon="@drawable/imagedel"
+        android:title="게시글"/>
+    <item android:id="@+id/navigation_home"
+        android:icon="@drawable/imagedel"
+        android:title="홈"/>
+    <item android:id="@+id/navigation_chat"
+        android:icon="@drawable/imagedel"
+        android:title="채팅"/>
+    <item android:id="@+id/navigation_myPage"
+        android:icon="@drawable/imagedel"
+        android:title="마이페이지"/>
+</menu>
